@@ -32,6 +32,6 @@ jobs:
           mkdir -p /tmp/pack-test
           cd /tmp/pack-test
           npm init -y
-          npm install "$GITHUB_WORKSPACE"/your-scope-agent-skills-*.tgz
-          npx agent-skills --version
-          npx agent-skills list
+          npm install "$GITHUB_WORKSPACE"/avinashh-skills-*.tgz
+          npx skills --version
+          npx skills list
