@@ -60,16 +60,22 @@ A README is NOT exhaustive documentation. It is an orientation and a pointer to 
 ### Installation
 
 `ash
+
 # Clone the repo
+
 git clone https://github.com/org/repo.git
 cd repo
 
 # Install dependencies
-npm install   # or: pip install -r requirements.txt
+
+npm install # or: pip install -r requirements.txt
 
 # Set up environment
+
 cp .env.example .env
+
 # Edit .env with your values
+
 `
 
 ### Run
@@ -86,11 +92,11 @@ App runs at http://localhost:3000
 
 ## Configuration
 
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| DATABASE_URL | Yes | — | PostgreSQL connection string |
-| PORT | No | 3000 | Server port |
-| LOG_LEVEL | No | info | debug, info, warn, error |
+| Variable     | Required | Default | Description                  |
+| ------------ | -------- | ------- | ---------------------------- |
+| DATABASE_URL | Yes      | —       | PostgreSQL connection string |
+| PORT         | No       | 3000    | Server port                  |
+| LOG_LEVEL    | No       | info    | debug, info, warn, error     |
 
 ---
 
@@ -106,15 +112,13 @@ npm run test:e2e         # End-to-end tests
 
 ## Project Structure
 
-`
-src/
+`src/
   api/        - Route handlers
   services/   - Business logic
   models/     - Database models
   utils/      - Shared utilities
 tests/
-docs/
-`
+docs/`
 
 ---
 
@@ -142,6 +146,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines. PRs are welcome.
 ## Variant: Internal Tool README
 
 For internal tooling (not open source), simplify the template:
+
 - Remove badges and license
 - Add: "Owner: [team/person]", "Slack: #channel-name"
 - Add: "Support: [who to contact when it breaks]"
@@ -150,6 +155,7 @@ For internal tooling (not open source), simplify the template:
 ## Quality Checklist
 
 Before finishing:
+
 - [ ] First sentence passes the "what is this" test with no prior context
 - [ ] Install steps are complete and copy-pasteable
 - [ ] All required env vars are listed

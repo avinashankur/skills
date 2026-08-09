@@ -38,12 +38,12 @@ Deployment docs describe how the software gets from code to running in productio
 
 ## Environments
 
-| Environment | URL | Deployed from | Auto-deploy | Purpose |
-|-------------|-----|--------------|-------------|---------|
-| Production | https://app.example.com | main branch | No — manual trigger | Live users |
-| Staging | https://staging.example.com | main branch | Yes | QA + integration testing |
-| Dev | https://dev.example.com | develop branch | Yes | Feature testing |
-| Local | http://localhost:3000 | local machine | — | Development |
+| Environment | URL                         | Deployed from  | Auto-deploy         | Purpose                  |
+| ----------- | --------------------------- | -------------- | ------------------- | ------------------------ |
+| Production  | https://app.example.com     | main branch    | No — manual trigger | Live users               |
+| Staging     | https://staging.example.com | main branch    | Yes                 | QA + integration testing |
+| Dev         | https://dev.example.com     | develop branch | Yes                 | Feature testing          |
+| Local       | http://localhost:3000       | local machine  | —                   | Development              |
 
 ---
 
@@ -52,6 +52,7 @@ Deployment docs describe how the software gets from code to running in productio
 [Brief description of infrastructure. Reference the architecture doc if one exists.]
 
 Key components:
+
 - **App servers:** [e.g., 2x ECS Fargate tasks, auto-scaling 1–10]
 - **Database:** [e.g., RDS PostgreSQL 15 — Multi-AZ in prod, single instance in staging]
 - **Cache:** [e.g., ElastiCache Redis 7]
@@ -88,17 +89,21 @@ Deployments to staging are triggered automatically on merge to main. Production 
 ### Manual Deployment (emergency only)
 
 `ash
+
 # Set environment
+
 export ENV=production
 export IMAGE_TAG=v1.2.3
 
 # Build and push
+
 docker build -t myapp: .
 docker tag myapp: 123456789.dkr.ecr.us-east-1.amazonaws.com/myapp:
 aws ecr get-login-password | docker login --username AWS --password-stdin 123456789.dkr.ecr.us-east-1.amazonaws.com
 docker push 123456789.dkr.ecr.us-east-1.amazonaws.com/myapp:
 
 # Deploy
+
 aws ecs update-service --cluster prod --service myapp --force-new-deployment
 `
 
@@ -110,10 +115,13 @@ Migrations run automatically during deployment as an ECS task before the new app
 
 If a migration fails:
 `ash
+
 # Check migration logs
+
 aws logs tail /ecs/myapp-migrate --follow
 
 # Roll back the last migration
+
 npm run db:migrate:undo
 `
 
@@ -128,10 +136,11 @@ Secrets are stored in AWS Secrets Manager. The application reads them at startup
 To update a secret in production:
 `ash
 aws secretsmanager update-secret \
-  --secret-id prod/myapp/database \
-  --secret-string '{"password":"newvalue"}'
+ --secret-id prod/myapp/database \
+ --secret-string '{"password":"newvalue"}'
 
 # Then force a new deployment to pick up the change
+
 aws ecs update-service --cluster prod --service myapp --force-new-deployment
 `
 
@@ -163,15 +172,18 @@ ECS will automatically stop the rollout if health checks fail consecutively. Mon
 ### Manual rollback
 
 `ash
+
 # Find the previous task definition revision
+
 aws ecs describe-services --cluster prod --services myapp \
-  --query 'services[0].taskDefinition'
+ --query 'services[0].taskDefinition'
 
 # Roll back to previous version (e.g., revision 42)
+
 aws ecs update-service \
-  --cluster prod \
-  --service myapp \
-  --task-definition myapp:42
+ --cluster prod \
+ --service myapp \
+ --task-definition myapp:42
 `
 
 Rollback takes approximately [N] minutes.
@@ -180,10 +192,10 @@ Rollback takes approximately [N] minutes.
 
 ## Scaling
 
-| Component | Min | Max | Scale trigger |
-|-----------|-----|-----|--------------|
-| API servers | 2 | 10 | CPU > 70% for 3 min |
-| Workers | 1 | 5 | Queue depth > 100 |
+| Component   | Min | Max | Scale trigger       |
+| ----------- | --- | --- | ------------------- |
+| API servers | 2   | 10  | CPU > 70% for 3 min |
+| Workers     | 1   | 5   | Queue depth > 100   |
 
 Manual scale-out:
 `ash
@@ -197,11 +209,14 @@ aws ecs update-service --cluster prod --service myapp --desired-count 5
 Infrastructure is managed with [Terraform / CDK / Pulumi] in infra/.
 
 `ash
+
 # Preview changes
+
 cd infra
 terraform plan -var-file=prod.tfvars
 
 # Apply changes
+
 terraform apply -var-file=prod.tfvars
 `
 
@@ -209,11 +224,11 @@ terraform apply -var-file=prod.tfvars
 
 ## Common Issues
 
-| Symptom | Likely cause | Fix |
-|---------|-------------|-----|
-| Deploy stuck at 0% | ECR image push failed | Check CI logs, re-push image |
-| Health checks failing | Env var missing | Check ECS task logs, verify secrets |
-| DB migration hanging | Long-running lock | Check pg_locks, may need to kill blocking query |
+| Symptom               | Likely cause          | Fix                                             |
+| --------------------- | --------------------- | ----------------------------------------------- |
+| Deploy stuck at 0%    | ECR image push failed | Check CI logs, re-push image                    |
+| Health checks failing | Env var missing       | Check ECS task logs, verify secrets             |
+| DB migration hanging  | Long-running lock     | Check pg_locks, may need to kill blocking query |
 
 For more failure scenarios, see the [Runbook](runbook.md).
 
@@ -222,6 +237,7 @@ For more failure scenarios, see the [Runbook](runbook.md).
 ## Quality Checklist
 
 Before finishing:
+
 - [ ] All environments documented
 - [ ] Step-by-step deploy instructions are copy-pasteable
 - [ ] Rollback procedure is documented

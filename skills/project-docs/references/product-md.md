@@ -57,8 +57,8 @@ Unlike a README (which is technical orientation) or product docs (which are user
 ### Secondary Users
 
 | User type | Their role | What they need from this product |
-|-----------|-----------|----------------------------------|
-| [Type] | [Role] | [Need] |
+| --------- | ---------- | -------------------------------- |
+| [Type]    | [Role]     | [Need]                           |
 
 ---
 
@@ -99,12 +99,12 @@ Example: "Shipments tracked per active user per week" — measures core engageme
 
 ### Key Metrics
 
-| Metric | Target | Current | Trend |
-|--------|--------|---------|-------|
-| Monthly active users | 500 | 320 | Up 15% MoM |
-| Shipments tracked/day | 10,000 | 6,200 | Up 8% MoM |
-| Time-to-value (first tracking event) | < 5 min | 8 min | Improving |
-| Churn rate | < 3% MoM | 4.1% | Flat |
+| Metric                               | Target   | Current | Trend      |
+| ------------------------------------ | -------- | ------- | ---------- |
+| Monthly active users                 | 500      | 320     | Up 15% MoM |
+| Shipments tracked/day                | 10,000   | 6,200   | Up 8% MoM  |
+| Time-to-value (first tracking event) | < 5 min  | 8 min   | Improving  |
+| Churn rate                           | < 3% MoM | 4.1%    | Flat       |
 
 ---
 
@@ -122,9 +122,9 @@ Example: "Shipments tracked per active user per week" — measures core engageme
 
 ## Competitive Landscape
 
-| Competitor | Their strength | Our advantage | Who they win with |
-|-----------|---------------|--------------|------------------|
-| [Name] | [What they're good at] | [Why we win] | [Their ideal customer] |
+| Competitor | Their strength         | Our advantage | Who they win with      |
+| ---------- | ---------------------- | ------------- | ---------------------- |
+| [Name]     | [What they're good at] | [Why we win]  | [Their ideal customer] |
 
 ---
 
@@ -159,6 +159,7 @@ Example: "Shipments tracked per active user per week" — measures core engageme
 ## Quality Checklist
 
 Before finishing:
+
 - [ ] Users are described with specificity (not just "enterprises" or "developers")
 - [ ] Problem statement is written from user's perspective, not company's
 - [ ] Out-of-scope items are explicit

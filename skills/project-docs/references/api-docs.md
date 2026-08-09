@@ -39,9 +39,9 @@ Use this template for EVERY endpoint or function. Do not skip fields — if a va
 
 #### Parameters
 
-| Name | In | Type | Required | Description |
-|------|----|------|----------|-------------|
-| paramName | path / query / header / body | string | Yes | What it controls |
+| Name      | In                           | Type   | Required | Description      |
+| --------- | ---------------------------- | ------ | -------- | ---------------- |
+| paramName | path / query / header / body | string | Yes      | What it controls |
 
 #### Request Body
 
@@ -55,9 +55,9 @@ Content-Type: pplication/json
 
 Schema:
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| ield | string | Yes | ... |
+| Field | Type   | Required | Description |
+| ----- | ------ | -------- | ----------- |
+| ield  | string | Yes      | ...         |
 
 #### Response
 
@@ -70,20 +70,20 @@ Schema:
 }
 `
 
-| Field | Type | Always present | Description |
-|-------|------|---------------|-------------|
-| id | string | Yes | Resource identifier |
-| status | string | Yes | Current state |
+| Field  | Type   | Always present | Description         |
+| ------ | ------ | -------------- | ------------------- |
+| id     | string | Yes            | Resource identifier |
+| status | string | Yes            | Current state       |
 
 #### Error Responses
 
-| Status | Code | When it happens |
-|--------|------|-----------------|
-| 400 | VALIDATION_ERROR | Missing required field |
-| 401 | UNAUTHORIZED | Invalid or missing token |
-| 404 | NOT_FOUND | Resource does not exist |
-| 429 | RATE_LIMITED | Too many requests |
-| 500 | INTERNAL_ERROR | Unexpected server error |
+| Status | Code             | When it happens          |
+| ------ | ---------------- | ------------------------ |
+| 400    | VALIDATION_ERROR | Missing required field   |
+| 401    | UNAUTHORIZED     | Invalid or missing token |
+| 404    | NOT_FOUND        | Resource does not exist  |
+| 429    | RATE_LIMITED     | Too many requests        |
+| 500    | INTERNAL_ERROR   | Unexpected server error  |
 
 #### Example
 
@@ -110,9 +110,11 @@ Response:
 When documenting a full API (not a single endpoint), use this structure:
 
 `
+
 # API Reference — [Service Name]
 
 ## Overview
+
 - Base URL
 - Authentication
 - Versioning policy
@@ -121,6 +123,7 @@ When documenting a full API (not a single endpoint), use this structure:
 - Common error format
 
 ## Resources
+
 - [Resource 1]
   - [Method 1]
   - [Method 2]
@@ -128,6 +131,7 @@ When documenting a full API (not a single endpoint), use this structure:
   ...
 
 ## Changelog
+
 `
 
 ## Standards & Tools
@@ -141,6 +145,7 @@ When documenting a full API (not a single endpoint), use this structure:
 ## Quality Checklist
 
 Before finishing:
+
 - [ ] Every endpoint has a complete entry (no missing fields)
 - [ ] All examples use real-looking values, not "string" or "value"
 - [ ] All error codes are enumerated

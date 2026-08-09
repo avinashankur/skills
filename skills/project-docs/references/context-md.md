@@ -45,24 +45,23 @@ Unlike README (which is for getting started) or architecture docs (which are com
 
 ## Tech Stack
 
-| Layer | Technology | Version | Notes |
-|-------|-----------|---------|-------|
-| Language | TypeScript | 5.3 | Strict mode enabled |
-| Runtime | Node.js | 20 LTS | |
-| Framework | Express | 4.x | |
-| ORM | Prisma | 5.x | |
-| Database | PostgreSQL | 15 | |
-| Cache | Redis | 7 | |
-| Testing | Vitest | 1.x | |
-| CI | GitHub Actions | | |
-| Hosting | AWS ECS + RDS | | |
+| Layer     | Technology     | Version | Notes               |
+| --------- | -------------- | ------- | ------------------- |
+| Language  | TypeScript     | 5.3     | Strict mode enabled |
+| Runtime   | Node.js        | 20 LTS  |                     |
+| Framework | Express        | 4.x     |                     |
+| ORM       | Prisma         | 5.x     |                     |
+| Database  | PostgreSQL     | 15      |                     |
+| Cache     | Redis          | 7       |                     |
+| Testing   | Vitest         | 1.x     |                     |
+| CI        | GitHub Actions |         |                     |
+| Hosting   | AWS ECS + RDS  |         |                     |
 
 ---
 
 ## Codebase Map
 
-`
-src/
+`src/
   api/          - Express route handlers (one file per resource)
   services/     - Business logic (pure, no HTTP or DB direct)
   repositories/ - All DB access (Prisma queries)
@@ -75,8 +74,7 @@ prisma/
 tests/
   unit/         - Per-service tests (no DB)
   integration/  - Tests against test DB
-docs/
-`
+docs/`
 
 Do not look for business logic in route handlers — it belongs in services. Do not write raw SQL — use Prisma.
 
@@ -87,22 +85,28 @@ Do not look for business logic in route handlers — it belongs in services. Do 
 [List the most important conventions. Be specific and opinionated.]
 
 **Adding a new API endpoint:**
+
 1. Add route in src/api/[resource].ts following the existing pattern
 2. Implement business logic in src/services/[resource].service.ts
 3. DB access in src/repositories/[resource].repository.ts
-4. Add integration test in 	ests/integration/[resource].test.ts
+4. Add integration test in ests/integration/[resource].test.ts
 
 **Error handling:**
+
 - All errors must be instances of AppError (see src/utils/errors.ts)
 - Never throw plain Error objects in services
 - The global error middleware in src/middleware/error.ts formats the response
 
 **Auth:**
-- All routes are authenticated by default via equireAuth middleware
+
+- All routes are authenticated by default via
+  equireAuth middleware
 - Public routes must explicitly use the publicRoute wrapper
-- User context is always available as eq.user after auth middleware
+- User context is always available as
+  eq.user after auth middleware
 
 **Database:**
+
 - Never run queries outside of repository files
 - Use Prisma transactions for multi-step writes: prisma.([...])
 - All timestamps are stored as UTC; convert to user timezone in the frontend
@@ -116,7 +120,7 @@ Things that must ALWAYS be true. Do not write code that violates these:
 - All API responses follow the envelope format: { data: ..., error: null } or { data: null, error: { code, message } }
 - All database writes go through the repository layer
 - Workers are stateless — never write to local disk
-- No hardcoded secrets in code (use process.env.* with validation in src/config.ts)
+- No hardcoded secrets in code (use process.env.\* with validation in src/config.ts)
 - TypeScript strict mode is enforced — no ny types
 
 ---
@@ -141,7 +145,7 @@ npm run lint          # ESLint + Prettier check
 npm run typecheck     # tsc --noEmit
 `
 
-Before committing: 
+Before committing:
 pm run lint && npm run typecheck && npm test must all pass.
 
 ---
@@ -152,8 +156,8 @@ pm run lint && npm run typecheck && npm test must all pass.
 
 - The user.id in the session is always a UUID string, not a number. Comparing with === against a number will silently fail.
 - Redis is used for both caching AND session storage. Flushing Redis in dev kills all sessions.
-- The test database is seeded from prisma/seed.ts — if tests behave unexpectedly, try 
-pm run db:reset.
+- The test database is seeded from prisma/seed.ts — if tests behave unexpectedly, try
+  pm run db:reset.
 - Email sending is mocked in test and dev environments via MAIL_PROVIDER=mock.
 
 ---
@@ -161,6 +165,7 @@ pm run db:reset.
 ## Quality Checklist
 
 Before finishing:
+
 - [ ] One-sentence system description is specific and accurate
 - [ ] Full tech stack table includes versions
 - [ ] Codebase map reflects the actual directory structure
