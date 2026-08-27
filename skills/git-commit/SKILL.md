@@ -1,124 +1,65 @@
 ---
 name: git-commit
-description: 'Execute git commit with conventional commit message analysis, intelligent staging, and message generation. Use when user asks to commit changes, create a git commit, or mentions "/commit". Supports: (1) Auto-detecting type and scope from changes, (2) Generating conventional commit messages from diff, (3) Interactive commit with optional type/scope/description overrides, (4) Intelligent file staging for logical grouping'
-license: MIT
-allowed-tools: Bash
+description: >
+  Ultra-compressed commit message generator. Cuts noise from commit messages while preserving
+  intent and reasoning. Conventional Commits format. Subject ≤50 chars, body only when "why"
+  isn't obvious. Use when user says "write a commit", "commit message", "generate commit",
+  "/commit", or invokes /git-commit. Auto-triggers when staging changes.
 ---
 
-# Git Commit with Conventional Commits
+Write commit messages terse and exact. Conventional Commits format. No fluff. Why over what. Only generate commit messages for staged files or changes.
 
-## Overview
+## Rules
 
-Create standardized, semantic git commits using the Conventional Commits specification. Analyze the actual diff to determine appropriate type, scope, and message.
+**Subject line:**
+- `<type>(<scope>): <imperative summary>` — `<scope>` optional
+- Types: `feat`, `fix`, `refactor`, `perf`, `docs`, `test`, `chore`, `build`, `ci`, `style`, `revert`
+- Imperative mood: "add", "fix", "remove" — not "added", "adds", "adding"
+- ≤50 chars when possible, hard cap 72
+- No trailing period
+- Match project convention for capitalization after the colon
 
-## Conventional Commit Format
+**Body (only if needed):**
+- Skip entirely when subject is self-explanatory
+- Add body only for: non-obvious *why*, breaking changes, migration notes, linked issues
+- Wrap at 72 chars
+- Bullets `-` not `*`
+- Reference issues/PRs at end: `Closes #42`, `Refs #17`
 
-```
-<type>[optional scope]: <description>
+**What NEVER goes in:**
+- "This commit does X", "I", "we", "now", "currently" — the diff says what
+- "As requested by..." — use Co-authored-by trailer
+- "Generated with Claude Code" or any AI attribution — unless the user's own rule requires an `Assisted-by`/AI-attribution trailer, then add it as a trailer
+- Emoji (unless project convention requires)
+- Restating the file name when scope already says it
 
-[optional body]
+## Examples
 
-[optional footer(s)]
-```
+Diff: new endpoint for user profile with body explaining the why
+- ❌ "feat: add a new endpoint to get user profile information from the database"
+- ✅
+  ```
+  feat(api): add GET /users/:id/profile
 
-## Commit Types
+  Mobile client needs profile data without the full user payload
+  to reduce LTE bandwidth on cold-launch screens.
 
-| Type       | Purpose                        |
-| ---------- | ------------------------------ |
-| `feat`     | New feature                    |
-| `fix`      | Bug fix                        |
-| `docs`     | Documentation only             |
-| `style`    | Formatting/style (no logic)    |
-| `refactor` | Code refactor (no feature/fix) |
-| `perf`     | Performance improvement        |
-| `test`     | Add/update tests               |
-| `build`    | Build system/dependencies      |
-| `ci`       | CI/config changes              |
-| `chore`    | Maintenance/misc               |
-| `revert`   | Revert commit                  |
+  Closes #128
+  ```
 
-## Breaking Changes
+Diff: breaking API change
+- ✅
+  ```
+  feat(api)!: rename /v1/orders to /v1/checkout
 
-```
-# Exclamation mark after type/scope
-feat!: remove deprecated endpoint
+  BREAKING CHANGE: clients on /v1/orders must migrate to /v1/checkout
+  before 2026-06-01. Old route returns 410 after that date.
+  ```
 
-# BREAKING CHANGE footer
-feat: allow config to extend other configs
+## Auto-Clarity
 
-BREAKING CHANGE: `extends` key behavior changed
-```
+Always include body for: breaking changes, security fixes, data migrations, anything reverting a prior commit. Never compress these into subject-only — future debuggers need the context.
 
-## Workflow
+## Boundaries
 
-### 1. Analyze Diff
-
-```bash
-# If files are staged, use staged diff
-git diff --staged
-
-# If nothing staged, use working tree diff
-git diff
-
-# Also check status
-git status --porcelain
-```
-
-### 2. Stage Files (if needed)
-
-If nothing is staged or you want to group changes differently:
-
-```bash
-# Stage specific files
-git add path/to/file1 path/to/file2
-
-# Stage by pattern
-git add *.test.*
-git add src/components/*
-
-# Interactive staging
-git add -p
-```
-
-**Never commit secrets** (.env, credentials.json, private keys).
-
-### 3. Generate Commit Message
-
-Analyze the diff to determine:
-
-- **Type**: What kind of change is this?
-- **Scope**: What area/module is affected?
-- **Description**: One-line summary of what changed (present tense, imperative mood, <72 chars)
-
-### 4. Execute Commit
-
-```bash
-# Single line
-git commit -m "<type>[scope]: <description>"
-
-# Multi-line with body/footer
-git commit -m "$(cat <<'EOF'
-<type>[scope]: <description>
-
-<optional body>
-
-<optional footer>
-EOF
-)"
-```
-
-## Best Practices
-
-- One logical change per commit
-- Present tense: "add" not "added"
-- Imperative mood: "fix bug" not "fixes bug"
-- Reference issues: `Closes #123`, `Refs #456`
-- Keep description under 72 characters
-
-## Git Safety Protocol
-
-- NEVER update git config
-- NEVER run destructive commands (--force, hard reset) without explicit request
-- NEVER skip hooks (--no-verify) unless user asks
-- NEVER force push to main/master
-- If commit fails due to hooks, fix and create NEW commit (don't amend)
+Only generates the commit message. Does not run `git commit`, does not stage files, does not amend. Output two messages as code blocks ready to paste, one should be only the commit message and other should include the git command `git commit -m <commit-message  >`. "stop git-commit" or "normal mode": revert to verbose commit style.

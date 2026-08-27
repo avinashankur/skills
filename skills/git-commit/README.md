@@ -1,4 +1,4 @@
-# caveman-commit
+# git-commit
 
 Terse Conventional Commits. Why over what.
 
@@ -11,7 +11,7 @@ Outputs only the message. Does not stage, commit, or amend.
 ## How to invoke
 
 ```
-/caveman-commit
+/git-commit
 ```
 
 Also triggers on phrases like "write a commit", "commit message", "generate commit".
@@ -37,8 +37,3 @@ feat(api)!: rename /v1/orders to /v1/checkout
 BREAKING CHANGE: clients on /v1/orders must migrate to /v1/checkout
 before 2026-06-01. Old route returns 410 after that date.
 ```
-
-## See also
-
-- [`SKILL.md`](./SKILL.md) — full LLM-facing instructions
-- [Caveman README](../../README.md) — repo overview
