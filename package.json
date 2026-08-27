@@ -1,6 +1,6 @@
 {
   "name": "@avinashh/skills",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Maintain one canonical collection of agent skills and install them into any project with a single command.",
   "type": "module",
   "license": "MIT",
