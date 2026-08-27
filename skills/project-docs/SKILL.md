@@ -1,7 +1,7 @@
 ---
 name: project-docs
 description: >
-  Generate comprehensive project documentation — both Product Documentation (user-facing) and Technical/Engineering Documentation (developer-facing). Use this skill whenever the user wants to write, generate, or improve docs for a project, including: API documentation, Architecture docs (C4 model), ADRs (Architecture Decision Records), README files, Deployment/Infrastructure docs, Runbooks/Playbooks, How-To guides, Concept deep-dives, CONTEXT.md, PRODUCT.md, or any user-facing product guides, feature docs, changelogs, or onboarding content. Also triggers when the user says "document this", "write docs for", "help me write a README", "I need an ADR", "create an architecture diagram", "write a runbook", "document the API", "generate technical documentation", "product docs", "sync docs", "update CONTEXT", "update ARCHITECTURE", "verify docs", or similar. If the user's request touches on any kind of project documentation — even if they don't use those exact words — use this skill.
+  Generate comprehensive project documentation — both Product Documentation (user-facing) and Technical/Engineering Documentation (developer-facing). Use this skill whenever the user wants to write, generate, or improve docs for a project, including: API documentation, Architecture docs (C4 model), ADRs (Architecture Decision Records), README files, Deployment/Infrastructure docs, Runbooks/Playbooks, How-To guides, Concept deep-dives, CONTEXT.md, PRODUCT.md, or any user-facing product guides, feature docs, changelogs, or onboarding content. Also triggers when the user says "document this", "write docs for", "help me write a README", "I need an ADR", "create an architecture diagram", "write a runbook", "document the API", "generate technical documentation", "product docs", "sync docs", "update CONTEXT", "update ARCHITECTURE", "update README.md", "verify docs", or similar. If the user's request touches on any kind of project documentation — even if they don't use those exact words — use this skill.
 ---
 
 # Project Documentation Generator
@@ -14,14 +14,14 @@ You are an expert technical writer and documentation architect. Your job is to h
 
 Before doing anything else, determine **how** this skill was invoked. The invocation determines which mode to run.
 
-| Invocation                                           | Mode          | What happens                                          |
-| ---------------------------------------------------- | ------------- | ----------------------------------------------------- |
-| `/project-docs` (no args, **no docs exist** in repo) | **Scaffold**  | Create template files and folder structure            |
-| `/project-docs` (no args, **docs already exist**)    | **Verify**    | Audit doc health, report findings, make no changes    |
-| `/project-docs sync`                                 | **Sync**      | Update CONTEXT.md and ARCHITECTURE.md from codebase   |
-| `/project-docs <type>` (no further prompt)           | **Recommend** | Suggest next docs to write for that type              |
-| `/project-docs <type> <prompt>`                      | **Generate**  | Write/improve a specific document (existing workflow) |
-| Any request that names a specific doc to write       | **Generate**  | Write/improve a specific document (existing workflow) |
+| Invocation                                           | Mode          | What happens                                                    |
+| ---------------------------------------------------- | ------------- | --------------------------------------------------------------- |
+| `/project-docs` (no args, **no docs exist** in repo) | **Scaffold**  | Create template files and folder structure                      |
+| `/project-docs` (no args, **docs already exist**)    | **Verify**    | Audit doc health, report findings, make no changes              |
+| `/project-docs sync`                                 | **Sync**      | Update CONTEXT.md, ARCHITECTURE.md, and README.md from codebase |
+| `/project-docs <type>` (no further prompt)           | **Recommend** | Suggest next docs to write for that type                        |
+| `/project-docs <type> <prompt>`                      | **Generate**  | Write/improve a specific document (existing workflow)           |
+| Any request that names a specific doc to write       | **Generate**  | Write/improve a specific document (existing workflow)           |
 
 Detect "no docs exist" by checking for the presence of at least two of: `ARCHITECTURE.md`, `CONTEXT.md`, `README.md` at the repo root.
 
@@ -134,7 +134,7 @@ Do not make any changes. The user decides what to fix.
 
 ## Mode: Sync (keep CONTEXT.md and ARCHITECTURE.md honest)
 
-This mode runs **only** when the user types `/project-docs sync`. It keeps `CONTEXT.md` and `ARCHITECTURE.md` accurate and consistent with the codebase.
+This mode runs **only** when the user types `/project-docs sync`. It keeps `CONTEXT.md`, `ARCHITECTURE.md`, and `README.md` accurate and consistent with the codebase.
 
 Read both files at the start. You won't always need to update them, but you need to know what's in them before you can guard them.
 
@@ -213,6 +213,7 @@ At the **end of any sync session**, before signing off:
 2. Check whether any module, port, or adapter was created/renamed — if so, update `ARCHITECTURE.md`
 3. Check whether any open question was resolved — if so, update and set `**Last updated:**`
 4. If `CONTEXT.md` says "No application code written yet" but code now exists — fix that immediately
+5. Update `README.md` if the project is now runnable or has a new entry point or any new setup instructions are introduced.
 
 Don't batch these up across multiple sessions. Stale docs compound.
 
@@ -429,19 +430,19 @@ This is the standard docs layout this skill enforces. Use this as the source of 
 
 ## Tone Guidelines by Doc Type
 
-| Doc Type     | Voice                       | Length target                                |
-| ------------ | --------------------------- | -------------------------------------------- |
-| API docs     | Precise, neutral, technical | As long as needed — completeness required    |
-| Architecture | Explanatory, structured     | Medium — enough for a new engineer to orient |
-| ADR          | Concise, decision-focused   | Short — 1-2 pages max                        |
-| README       | Welcoming, scannable        | Short — fits on one screen ideally           |
-| Deployment   | Procedural, exact           | Medium — step-by-step                        |
+| Doc Type     | Voice                       | Length target                                                                            |
+| ------------ | --------------------------- | ---------------------------------------------------------------------------------------- |
+| API docs     | Precise, neutral, technical | As long as needed — completeness required                                                |
+| Architecture | Explanatory, structured     | Medium — enough for a new engineer to orient                                             |
+| ADR          | Concise, decision-focused   | Short — 1-2 pages max                                                                    |
+| README       | Welcoming, scannable        | Short — fits on one screen ideally                                                       |
+| Deployment   | Procedural, exact           | Medium — step-by-step                                                                    |
 | Runbook      | Urgent, action-oriented     | Medium — **local dev section first and detailed**, production section second and generic |
-| How-To       | Imperative, procedural      | Short-medium — one task, nothing else        |
-| Concept      | Explanatory, precise, deep  | Medium-long — as deep as the concept demands |
-| CONTEXT.md   | Dense, factual              | Short — AI/agent context primer              |
-| PRODUCT.md   | Narrative, vision-first     | Medium                                       |
-| Product docs | Friendly, task-focused      | Varies by section                            |
+| How-To       | Imperative, procedural      | Short-medium — one task, nothing else                                                    |
+| Concept      | Explanatory, precise, deep  | Medium-long — as deep as the concept demands                                             |
+| CONTEXT.md   | Dense, factual              | Short — AI/agent context primer                                                          |
+| PRODUCT.md   | Narrative, vision-first     | Medium                                                                                   |
+| Product docs | Friendly, task-focused      | Varies by section                                                                        |
 
 ---
 
