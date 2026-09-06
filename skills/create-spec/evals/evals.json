@@ -1,0 +1,41 @@
+{
+  "skill_name": "create-spec",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We need to add rate limiting to our API endpoints using Redis token bucket algorithm. Please spec this out using create-spec.",
+      "expected_output": "Creates a structured feature spec in specs/001-rate-limiting/spec.md with P1/P2 user stories, Given/When/Then acceptance criteria, explicit out-of-scope items, and non-functional requirements.",
+      "expectations": [
+        "The output file is placed in a specs/ directory with a sequential prefix (e.g. specs/001-rate-limiting/spec.md)",
+        "The spec contains a Problem Statement explaining the need for rate limiting",
+        "The user stories are prioritized into P1 (Core), P2, and P3",
+        "Acceptance criteria are written in Given/When/Then format covering both normal requests and rate-limited 429 requests",
+        "An explicit Out of Scope section lists items not covered in this feature (e.g., custom per-user rate limit tiers, distributed rate limiting across multi-regions)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "/create-spec constitution",
+      "expected_output": "Generates a comprehensive project constitution in specs/constitution.md tailored to the repository's tech stack and invariants.",
+      "expectations": [
+        "The output is saved to specs/constitution.md",
+        "It defines core engineering principles and tech stack invariants",
+        "It defines architectural boundaries and layering (routes vs services vs data access)",
+        "It includes a mandatory test and verification command gate",
+        "It includes an explicit 'What NOT to do' section covering common AI anti-patterns"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I have an approved spec and plan for JWT authentication. Decompose this into an actionable tasks graph.",
+      "expected_output": "Creates a phased, dependency-ordered tasks.md file with atomic tasks, file targets, and automated test commands.",
+      "expectations": [
+        "The output file is saved as tasks.md",
+        "Tasks are grouped into sequential phases (Phase 1: Contracts/Schemas, Phase 2: Domain Services, Phase 3: Integration, Phase 4: Verification)",
+        "Every task has an unchecked checkbox format: - [ ]",
+        "Every task specifies the exact target files to create or modify",
+        "Every task provides an automated verification command (e.g., npm test, tsc --noEmit)"
+      ]
+    }
+  ]
+}

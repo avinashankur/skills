@@ -1,4 +1,4 @@
-﻿# ADR — Architecture Decision Record Reference
+# ADR — Architecture Decision Record Reference
 
 ## Purpose
 
@@ -31,12 +31,9 @@ Do NOT write an ADR for:
 
 ## File naming convention
 
-Typical conventions:
+Typical convention:
 
-- docs/adr/001-use-postgresql.md (default)
-- docs/adr/ADR-001-use-postgresql.md
-- docs/architecture/decisions/0001-record-architecture-decisions.md
-- adr/2024-01-15-choose-monorepo.md
+- `docs/adr/001-use-postgresql.md`
 
 ## ADR Template
 

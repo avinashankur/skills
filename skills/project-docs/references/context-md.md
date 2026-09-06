@@ -1,4 +1,4 @@
-﻿# CONTEXT.md Reference
+# CONTEXT.md Reference
 
 ## Purpose
 
@@ -113,6 +113,16 @@ Do not look for business logic in route handlers — it belongs in services. Do 
 
 ---
 
+## Glossary
+
+[Canonical definitions for domain terms used in code, docs, and conversation. Every term means one thing in this project. If a term is used differently elsewhere, note the distinction.]
+
+| Term       | Definition                                                                 |
+| ---------- | -------------------------------------------------------------------------- |
+| [Term]     | [Precise, one-sentence definition as used in this project]                 |
+
+---
+
 ## Key Invariants
 
 Things that must ALWAYS be true. Do not write code that violates these:
@@ -121,7 +131,7 @@ Things that must ALWAYS be true. Do not write code that violates these:
 - All database writes go through the repository layer
 - Workers are stateless — never write to local disk
 - No hardcoded secrets in code (use process.env.\* with validation in src/config.ts)
-- TypeScript strict mode is enforced — no ny types
+- TypeScript strict mode is enforced — no  ny types
 
 ---
 
@@ -137,7 +147,7 @@ Things that must ALWAYS be true. Do not write code that violates these:
 
 ## Development Workflow
 
-`ash
+` ash
 npm install           # Install dependencies
 npm run dev           # Start dev server (hot reload)
 npm test              # Run tests
@@ -170,6 +180,7 @@ Before finishing:
 - [ ] Full tech stack table includes versions
 - [ ] Codebase map reflects the actual directory structure
 - [ ] Key patterns are written as imperative instructions
+- [ ] Glossary covers all domain terms used in code and docs
 - [ ] Invariants capture things that must never be broken
 - [ ] "What not to do" list covers the most common AI/new-hire mistakes
 - [ ] Gotchas section covers non-obvious traps

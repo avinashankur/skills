@@ -197,9 +197,8 @@ graph LR
 
 ## Related Documents
 
-- [ADR Index](./decisions/)
-- [Deployment Guide](./deployment.md)
-- [Runbook](./runbook.md)
+- [ADR Index](docs/adr/)
+- [Runbooks](docs/runbooks/)
 
 ---
 

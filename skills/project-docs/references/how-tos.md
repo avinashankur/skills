@@ -8,7 +8,6 @@ How-tos are NOT:
 
 - Explanations of why (that's an ADR or concept doc)
 - Emergency procedures (that's a runbook)
-- User-facing instructions (that's product docs)
 - Reference material (that's API docs)
 
 A how-to answers: "How do I do X?" — and nothing else.

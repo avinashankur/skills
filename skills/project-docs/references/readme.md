@@ -1,4 +1,4 @@
-﻿# README Reference
+# README Reference
 
 ## Purpose
 
@@ -125,8 +125,7 @@ docs/`
 ## Documentation
 
 - [Full documentation](https://docs.example.com)
-- [API Reference](docs/api.md)
-- [Architecture](docs/architecture.md)
+- [Architecture](ARCHITECTURE.md)
 - [Changelog](CHANGELOG.md)
 
 ---
