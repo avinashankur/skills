@@ -4,10 +4,27 @@ Quick validation script for skills - minimal version
 """
 
 import sys
-import os
 import re
 import yaml
 from pathlib import Path
+
+# Directories whose contents are not packaged as part of the skill, so any
+# SKILL.md inside them shouldn't count toward the single-SKILL.md check below.
+# Mirrors package_skill.py: __pycache__ and node_modules are excluded at any
+# depth, while evals is only excluded at the skill root.
+EXCLUDED_DIR_PARTS = {'__pycache__', 'node_modules'}
+ROOT_EXCLUDED_DIR_PARTS = {'evals'}
+
+
+def _counts_as_skill_md(rel_path):
+    """True if a SKILL.md at rel_path (relative to the skill root) would be packaged."""
+    dir_parts = rel_path.parts[:-1]
+    if any(part in EXCLUDED_DIR_PARTS for part in dir_parts):
+        return False
+    if dir_parts and dir_parts[0] in ROOT_EXCLUDED_DIR_PARTS:
+        return False
+    return True
+
 
 def validate_skill(skill_path):
     """Basic validation of a skill"""
@@ -17,6 +34,31 @@ def validate_skill(skill_path):
     skill_md = skill_path / 'SKILL.md'
     if not skill_md.exists():
         return False, "SKILL.md not found"
+
+    # A skill must contain exactly one SKILL.md, at <folder>/SKILL.md. Extra
+    # (nested) SKILL.md files are rejected on upload: the Skills API and claude.ai
+    # accept exactly one per skill — only Claude Code's filesystem loads nested
+    # ones. package_skill produces an upload-bound .skill, so block here rather
+    # than ship an artifact that's guaranteed to fail on upload.
+    skill_md_files = [
+        p for p in skill_path.rglob('SKILL.md')
+        if _counts_as_skill_md(p.relative_to(skill_path))
+    ]
+    if len(skill_md_files) > 1:
+        extras = sorted(
+            str(p.relative_to(skill_path)) for p in skill_md_files
+            if p.resolve() != skill_md.resolve()
+        )
+        return False, (
+            f"Found {len(skill_md_files)} SKILL.md files, but a skill must contain "
+            f"exactly one at <folder>/SKILL.md. The Skills API and claude.ai reject "
+            f"multiple on upload (only Claude Code's filesystem loads nested skills). "
+            f"Extra: {', '.join(extras)}.\n"
+            "  - Separate skills: package each on its own, or build a plugin "
+            "(skills/<name>/SKILL.md).\n"
+            "  - Supporting docs: rename to non-SKILL.md files (e.g. references/<topic>.md).\n"
+            "  - Swept in by mistake: package only the one skill directory."
+        )
 
     # Read and validate frontmatter
     content = skill_md.read_text()
@@ -93,11 +135,12 @@ def validate_skill(skill_path):
 
     return True, "Skill is valid!"
 
+
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: python quick_validate.py <skill_directory>")
         sys.exit(1)
-    
+
     valid, message = validate_skill(sys.argv[1])
     print(message)
     sys.exit(0 if valid else 1)

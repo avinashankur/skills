@@ -405,15 +405,15 @@ Take `best_description` from the JSON output and update the skill's SKILL.md fro
 
 ---
 
-### Package and Present (only if `present_files` tool is available)
+### Package and Present (only if a file-delivery tool is available)
 
-Check whether you have access to the `present_files` tool. If you don't, skip this step. If you do, package the skill and present the .skill file to the user:
+Check whether you have access to a tool that presents files to the user — `present_files`, or `SendUserFile` in Cowork remote. If you have neither, skip this step. If you do, package the skill and send the user the resulting `.skill` file with that tool:
 
 ```bash
 python -m scripts.package_skill <path/to/skill-folder>
 ```
 
-After packaging, direct the user to the resulting `.skill` file path so they can install it.
+The presented `.skill` (or bare `SKILL.md`) file card shows a **Save skill** button when the user's org allows skill creation; clicking it installs the skill into their profile.
 
 ---
 
