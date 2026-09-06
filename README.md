@@ -46,7 +46,7 @@ skills update
 
 ### How `update` knows what's yours
 
-Every skill installed by this CLI is recorded in `.agents/skills.json`:
+Every skill installed by this CLI is recorded in `.agents/agent-skills.json`:
 
 ```json
 {
@@ -65,31 +65,35 @@ Every skill installed by this CLI is recorded in `.agents/skills.json`:
 
 | Skill | Description |
 |-------|-------------|
-| `caveman` | Dumbs down explanations to absolute basics |
-| `caveman-commit` | Git commits in blunt, no-nonsense language |
-| `caveman-review` | Code reviews with brutal simplicity |
+| `bro` | Re-explain previous assistant replies in a much simpler, casual way |
+| `caveman` | Ultra-compressed communication mode cutting output tokens |
+| `caveman-review` | Ultra-compressed, blunt code review feedback |
 | `code-review` | Review changes since a fixed point (commit, branch, tag, or merge-base) |
 | `cold-email` | Write B2B cold emails and follow-up sequences that get replies |
 | `copywriting` | Write, rewrite, or improve marketing copy for any page |
-| `domain-modeling` | Build and sharpen a project's domain model |
-| `find-skills` | Helps discover and install agent skills |
+| `create-pr` | Take uncommitted work all the way to an open pull request |
+| `create-spec` | Execute Spec-Driven Development (SDD) inspired by GitHub Spec Kit |
+| `extract-design-md` | Extract a website's design system tokens and components into a DESIGN.md file |
+| `find-skills` | Discover and install agent skills |
 | `fronted-coding-standards` | Enterprise-grade frontend coding standards for TypeScript/Vite/Next.js projects |
-| `git-commit` | Execute git commit with conventional commit message analysis and intelligent staging |
+| `git-commit` | Ultra-compressed conventional commit message generator |
+| `git-stage` | Organize and partition uncommitted changes into clean, atomic commits |
 | `grill-me` | A relentless interview to sharpen a plan or design |
-| `grill-with-docs` | Relentless interview that also creates ADRs and supporting docs |
 | `grilling` | Stress-test plans or designs with relentless questioning |
 | `handoff` | Compact a conversation into a handoff document for another agent |
-| `improve-codebase-architecture` | Scan a codebase for improvement opportunities and present an HTML report |
-| `project-docs` | Generate and maintain project documentation |
-| `redesign-existing-projects` | Upgrade existing websites and apps to premium quality |
-| `research` | Investigate a question against high-trust primary sources |
+| `humanizer` | Remove signs of AI-generated writing from text to make it natural and human |
+| `improve-codebase-architecture` | Scan a codebase for architecture improvement opportunities and present an HTML report |
+| `issue-tracker-gh` | Create, list, search, update, close, and manage GitHub issues using the gh CLI |
+| `npm-publish` | Publish an npm package to the registry and sync releases with GitHub |
+| `project-docs` | Generate and maintain comprehensive technical and engineering documentation |
+| `redesign-existing-projects` | Upgrade existing websites and apps to premium design quality |
+| `research` | Investigate questions against primary sources and capture Markdown findings |
 | `setup-pre-commit` | Set up Husky pre-commit hooks with lint-staged, type checking, and tests |
 | `shadcn` | Manage shadcn components — adding, searching, fixing, debugging, styling |
-| `skill-creator` | Create, modify, and improve skills; measure skill performance |
+| `ship-it` | Full handoff orchestrator — takes work from code review to open PR and issue update |
+| `skill-creator` | Create, modify, and improve skills; measure skill performance and benchmark |
 | `teach` | Teach a new skill or concept within the workspace |
 | `to-prd` | Turn a conversation into a PRD and publish to the project issue tracker |
-| `turborepo` | Turborepo monorepo setup and management |
-| `vercel-react-best-practices` | React and Next.js performance optimization guidelines from Vercel Engineering |
 
 ## License
 
