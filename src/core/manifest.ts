@@ -1,5 +1,5 @@
-import { getManifestPath } from "./paths.js";
-import { readJsonFile, writeJsonFile } from "../utils/filesystem.js";
+import { getManifestPath, getLegacyManifestPaths } from "./paths.js";
+import { readJsonFile, writeJsonFile, removeFile } from "../utils/filesystem.js";
 
 export const MANIFEST_SCHEMA_VERSION = 1;
 
@@ -23,7 +23,14 @@ function emptyManifest(packageVersion: string): Manifest {
 
 export async function readManifest(targetDirectory: string, packageVersion: string): Promise<Manifest> {
   const manifestPath = getManifestPath(targetDirectory);
-  const existing = await readJsonFile<Manifest>(manifestPath);
+  let existing = await readJsonFile<Manifest>(manifestPath);
+
+  if (!existing) {
+    for (const legacyPath of getLegacyManifestPaths(targetDirectory)) {
+      existing = await readJsonFile<Manifest>(legacyPath);
+      if (existing) break;
+    }
+  }
 
   if (!existing) {
     return emptyManifest(packageVersion);
@@ -39,6 +46,9 @@ export async function readManifest(targetDirectory: string, packageVersion: stri
 
 export async function writeManifest(targetDirectory: string, manifest: Manifest): Promise<void> {
   await writeJsonFile(getManifestPath(targetDirectory), manifest);
+  for (const legacyPath of getLegacyManifestPaths(targetDirectory)) {
+    await removeFile(legacyPath);
+  }
 }
 
 export function markSkillInstalled(manifest: Manifest, skillName: string, packageVersion: string): Manifest {

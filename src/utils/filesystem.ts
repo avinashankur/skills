@@ -44,6 +44,13 @@ export async function removeDirectoryRecursive(targetPath: string): Promise<void
   }
 }
 
+/** Remove a file if it exists. */
+export async function removeFile(targetPath: string): Promise<void> {
+  if (await pathExists(targetPath)) {
+    await fs.unlink(targetPath);
+  }
+}
+
 export async function readJsonFile<T>(filePath: string): Promise<T | null> {
   if (!(await pathExists(filePath))) {
     return null;

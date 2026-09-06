@@ -13,7 +13,8 @@ import path from "node:path";
 
 const AGENTS_DIR_NAME = ".agents";
 const SKILLS_DIR_NAME = "skills";
-const MANIFEST_FILE_NAME = "agent-skills.json";
+const MANIFEST_FILE_NAME = "skills-lock.json";
+export const LEGACY_MANIFEST_FILE_NAMES = ["agent-skills.json", "skills.json"] as const;
 
 /** Root of the installed npm package (works both from src/ via tsx and dist/ after build). */
 export function getPackageRoot(): string {
@@ -49,7 +50,12 @@ export function getTargetSkillsDirectory(targetDirectory: string): string {
   return path.join(getAgentsDirectory(targetDirectory), SKILLS_DIR_NAME);
 }
 
-/** The `.agents/agent-skills.json` manifest path inside the target project. */
+/** The `.agents/skills-lock.json` manifest path inside the target project. */
 export function getManifestPath(targetDirectory: string): string {
   return path.join(getAgentsDirectory(targetDirectory), MANIFEST_FILE_NAME);
+}
+
+/** Legacy manifest paths checked for backward compatibility. */
+export function getLegacyManifestPaths(targetDirectory: string): string[] {
+  return LEGACY_MANIFEST_FILE_NAMES.map((name) => path.join(getAgentsDirectory(targetDirectory), name));
 }

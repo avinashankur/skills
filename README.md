@@ -36,6 +36,16 @@ skills add git-commit
 skills update
 ```
 
+### Global installation (Use across all projects)
+
+You can also install skills globally into your user home directory so your AI agent can use them in any project on your machine:
+
+```bash
+cd ~ && npx @avinashh/skills init
+```
+
+For the complete guide on all commands, runtime agent usage, and global configuration, see the [Usage Guide](docs/product/usage.md).
+
 ### Conflict handling
 
 | Flag | Behavior |
@@ -46,7 +56,7 @@ skills update
 
 ### How `update` knows what's yours
 
-Every skill installed by this CLI is recorded in `.agents/agent-skills.json`:
+Every skill installed by this CLI is recorded in `.agents/skills-lock.json`:
 
 ```json
 {
