@@ -86,6 +86,7 @@ Every skill installed by this CLI is recorded in `.agents/skills-lock.json`:
 | `extract-design-md` | Extract a website's design system tokens and components into a DESIGN.md file |
 | `find-skills` | Discover and install agent skills |
 | `fronted-coding-standards` | Enterprise-grade frontend coding standards for TypeScript/Vite/Next.js projects |
+| `fumadocs` | Write and design beautiful, well-structured documentation using Fumadocs and Fumapress |
 | `git-commit` | Ultra-compressed conventional commit message generator |
 | `git-stage` | Organize and partition uncommitted changes into clean, atomic commits |
 | `grill-me` | A relentless interview to sharpen a plan or design |
