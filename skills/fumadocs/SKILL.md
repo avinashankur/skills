@@ -21,13 +21,14 @@ description: >
 
 Read these companion files **before writing any docs**:
 
-| File | Purpose |
-| :--- | :--- |
-| `references/components.md` | Component usage guide — `<Callout>`, `<Tabs>`, `<Steps>`, `<Cards>`, `<Accordions>`, `<Files>`, `<InlineTOC>`, and `<Mermaid>` with props, examples, and when-to-use guidance. **Always cross-check against official docs** before using. |
-| `references/setup-fumadocs.md` | Fumadocs (Next.js) setup guidance — high-level architecture and what to fetch from official docs |
-| `references/setup-fumapress.md` | Fumapress (Waku) setup guidance — high-level architecture and what to fetch from official docs |
-| `references/setup-section-switcher.md` | Root section / framework switcher setup guide — Fumadocs tab group internals, `$folder` unbinding, root `/` scoping, and Fumapress `press.config.tsx` implementation |
-| `examples/page-templates.md` | Copy-paste MDX templates for section indexes, guides, specs, concept pages, and API references |
+| File                                   | Purpose                                                                                                                                                                                                                                   |
+| :------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `references/components.md`             | Component usage guide — `<Callout>`, `<Tabs>`, `<Steps>`, `<Cards>`, `<Accordions>`, `<Files>`, `<InlineTOC>`, and `<Mermaid>` with props, examples, and when-to-use guidance. **Always cross-check against official docs** before using. |
+| `references/setup-fumadocs.md`         | Fumadocs (Next.js) setup guidance — high-level architecture and what to fetch from official docs                                                                                                                                          |
+| `references/setup-fumapress.md`        | Fumapress (Waku) setup guidance — high-level architecture and what to fetch from official docs                                                                                                                                            |
+| `references/folder-group-root-tabs.md` | Official folder group root tabs pattern (default subject at root `/`) — native `(framework)` folder groups, automatic sidebar scoping, and zero-hack layout                                                                               |
+| `references/setup-section-switcher.md` | **(Strictly for Fumapress — may be stale)** Fumapress `press.config.tsx` section switcher workaround. For standard Fumadocs (Next.js), use `references/folder-group-root-tabs.md` instead.                                                |
+| `examples/page-templates.md`           | Copy-paste MDX templates for section indexes, guides, specs, concept pages, and API references                                                                                                                                            |
 
 ---
 
@@ -45,19 +46,19 @@ Read these companion files **before writing any docs**:
 > Never default to raw paragraphs or plain markdown lists when a richer component
 > exists. The component library is there to make docs **visually excellent**.
 
-| Content Pattern | Correct Component | Do NOT Use |
-| :--- | :--- | :--- |
-| **Navigation hub** (section index linking sub-pages) | `<Cards>` with `<Card>` per sub-page, each with `icon`, `title`, `description`, `href` | Bulleted link lists |
-| **Warnings / important notes / info** | `<Callout type="info\|warn\|error">` | Bold text or blockquotes |
-| **Step-by-step instructions** | `<Steps>` with `<Step>` per numbered step | Ordered lists `1. 2. 3.` |
-| **Parallel alternatives** (e.g., npm vs pnpm vs yarn) | `<Tabs items={[...]}>` with `<Tab>` per variant | Multiple code blocks stacked |
-| **FAQs or collapsible detail** | `<Accordions>` with `<Accordion>` per item | Static paragraphs or Card grids |
-| **File / folder structure** | `<Files>` with `<Folder>` and `<File>` | Code-fenced `tree` output |
-| **Architecture / flow diagrams** | ` ```mermaid ``` ` fenced code block or `<Mermaid chart="..." />` (requires renderer setup) | ASCII diagrams |
-| **Tabular data, comparisons, API params** | Markdown `\| table \|` syntax | Nested lists or cards |
-| **Time & Space Complexities, Variables** | Inline code `` `O(1)` ``, `` `O(n)` ``, `` `k` `` | Raw LaTeX math `$...$` (renders literal dollar signs without math plugins) |
-| **KPIs / metrics / status values** | Inline `<code>` with `font-mono tabular-nums` | Plain text numbers |
-| **Long page with many headings** | `<InlineTOC>` at the top after intro paragraph | No TOC at all |
+| Content Pattern                                       | Correct Component                                                                           | Do NOT Use                                                                 |
+| :---------------------------------------------------- | :------------------------------------------------------------------------------------------ | :------------------------------------------------------------------------- |
+| **Navigation hub** (section index linking sub-pages)  | `<Cards>` with `<Card>` per sub-page, each with `icon`, `title`, `description`, `href`      | Bulleted link lists                                                        |
+| **Warnings / important notes / info**                 | `<Callout type="info\|warn\|error">`                                                        | Bold text or blockquotes                                                   |
+| **Step-by-step instructions**                         | `<Steps>` with `<Step>` per numbered step                                                   | Ordered lists `1. 2. 3.`                                                   |
+| **Parallel alternatives** (e.g., npm vs pnpm vs yarn) | `<Tabs items={[...]}>` with `<Tab>` per variant                                             | Multiple code blocks stacked                                               |
+| **FAQs or collapsible detail**                        | `<Accordions>` with `<Accordion>` per item                                                  | Static paragraphs or Card grids                                            |
+| **File / folder structure**                           | `<Files>` with `<Folder>` and `<File>`                                                      | Code-fenced `tree` output                                                  |
+| **Architecture / flow diagrams**                      | ` ```mermaid ``` ` fenced code block or `<Mermaid chart="..." />` (requires renderer setup) | ASCII diagrams                                                             |
+| **Tabular data, comparisons, API params**             | Markdown `\| table \|` syntax                                                               | Nested lists or cards                                                      |
+| **Time & Space Complexities, Variables**              | Inline code `` `O(1)` ``, `` `O(n)` ``, `` `k` ``                                           | Raw LaTeX math `$...$` (renders literal dollar signs without math plugins) |
+| **KPIs / metrics / status values**                    | Inline `<code>` with `font-mono tabular-nums`                                               | Plain text numbers                                                         |
+| **Long page with many headings**                      | `<InlineTOC>` at the top after intro paragraph                                              | No TOC at all                                                              |
 
 ### 1.3 Icon Usage in Cards
 
@@ -88,6 +89,7 @@ from the Lucide library — no manual import needed. Use PascalCase names (e.g.,
 > - **Right**: Section `Auth` containing `Quickstart`, `Providers`, `Sessions`.
 
 #### Why This Matters:
+
 1. **Sidebar Scannability**: Repeating the category name adds visual noise and forces the user's eye to filter out redundant words on every single row.
 2. **Horizontal Space & Truncation**: Sidebars have limited width. Repeating prefixes like `Kubernetes Cluster Architecture` forces meaningful words to truncate as `Kubernetes Clust...`. Using `Cluster Architecture` preserves clarity.
 3. **Hierarchy Integrity**: The sidebar and breadcrumbs already establish that `Invoices` is nested under `Billing`. Writing `Billing > Billing Invoices` is redundant stuttering.
@@ -101,15 +103,16 @@ Every `.mdx` file begins with YAML frontmatter inside `---` fences.
 
 ```yaml
 ---
-title: Page Title                    # Required — rendered as <h1>
-description: One-line summary        # Required — rendered below title, used in OG
-full: true                           # Optional — full-width layout (no TOC sidebar)
+title: Page Title # Required — rendered as <h1>
+description: One-line summary # Required — rendered below title, used in OG
+full: true # Optional — full-width layout (no TOC sidebar)
 ---
 ```
 
 > **Note on Icons**: Do **not** add `icon` to page frontmatter. Icons are reserved exclusively for folders in `meta.json`.
 
 ### Key Rules
+
 - `title` ≤ 60 characters. It becomes the `<title>` tag and the sidebar label.
 - **Never repeat the parent section name in `title`** (e.g., inside an `auth/` directory, write `title: Overview` or `title: OAuth Setup`, never `title: Auth Overview` or `title: Auth OAuth Setup`).
 - `description` ≤ 160 characters. It becomes the meta description and the subtitle.
@@ -173,6 +176,7 @@ content/docs/
 ### 4.1 Section Index Pages
 
 Every folder **must** have an `index.mdx` that:
+
 1. Sets `title: Overview` (or a concise functional title like `Introduction` or `Getting Started`) in frontmatter — never repeat the parent section name.
 2. Starts with a 1–2 sentence intro.
 3. (Optional) Includes a Mermaid flowchart showing the reading order.
@@ -187,22 +191,86 @@ Every folder **must** have an `index.mdx` that:
 ### 4.3 Mermaid Diagrams
 
 > [!IMPORTANT]
-> **Mermaid is NOT Built-In**: Neither Fumadocs nor Fumapress includes a Mermaid renderer out of the box. Without a configured renderer, ```` ```mermaid ```` code blocks display as raw plain text with a copy button.
+> **Mermaid is NOT Built-In**: Neither Fumadocs nor Fumapress includes a Mermaid renderer out of the box. Without a configured renderer, ` ```mermaid ` code blocks display as raw plain text with a copy button.
 >
-> **Clean Architecture Pattern**:
-> 1. Install `beautiful-mermaid` (`npm install beautiful-mermaid`).
-> 2. Create a dedicated component in `src/components/mermaid.tsx` that calls `renderMermaidSVG(chart, { bg: "var(--color-fd-card)", fg: "var(--color-fd-foreground)", transparent: true })`.
-> 3. Register `Mermaid` in `press.config.tsx` under `getMdxComponents`.
+> **Recommended Setup (Client Component with `mermaid`)**:
+>
+> 1. Install `mermaid` and `next-themes` (`npm install mermaid next-themes`).
+> 2. Create `src/components/mermaid.tsx` using `mermaid.initialize()` and client-side hydration guard.
+> 3. Register `Mermaid` in `src/components/mdx.tsx` (Fumadocs / Next.js) or `press.config.tsx` (Fumapress) under `getMDXComponents`.
 > 4. In MDX, invoke directly: `<Mermaid chart={`flowchart TD ...`} />`.
+>
+> _(Alternatively, install `beautiful-mermaid` for a lighter server-rendered SVG approach)._
+
+#### Fixing Blurry Shadows, Colored Tints & Oversized Diagrams
+
+By default, Mermaid diagrams can render with blurry SVG drop-shadow filters, muddy gradient borders, colored fills, and massive 100%-width scaling.
+
+To ensure diagrams are crisp, solid, uncolored (neutral monochrome), and comfortably proportioned:
+
+1. **Mermaid Initialization (Monochrome & Crisp)**: In `mermaid.initialize()`, set `look: 'classic'`, `theme: 'base'`, `fontSize: 13`, and configure neutral grayscale `themeVariables` with `useGradient: false` and `dropShadow: 'none'`:
+
+   ```ts
+   const neutralBorder = isDark ? "#52525b" : "#71717a";
+   const neutralLine = isDark ? "#71717a" : "#71717a";
+
+   mermaid.initialize({
+     startOnLoad: false,
+     securityLevel: "loose",
+     fontFamily: "inherit",
+     fontSize: 13,
+     themeCSS: "margin: 0 !important;",
+     theme: "base",
+     look: "classic",
+     flowchart: {
+       padding: 8,
+     },
+     themeVariables: {
+       useGradient: false,
+       dropShadow: "none",
+       darkMode: isDark,
+       background: "transparent",
+       fontSize: "13px",
+       // Strictly neutral shades of black / zinc / gray (zero blue or colored tints)
+       primaryColor: isDark ? "#18181b" : "#ffffff",
+       primaryTextColor: isDark ? "#f4f4f5" : "#18181b",
+       primaryBorderColor: neutralBorder,
+       secondaryColor: isDark ? "#27272a" : "#f4f4f5",
+       secondaryTextColor: isDark ? "#f4f4f5" : "#18181b",
+       secondaryBorderColor: neutralBorder,
+       tertiaryColor: isDark ? "#18181b" : "#ffffff",
+       tertiaryBorderColor: neutralBorder,
+       lineColor: neutralLine,
+       arrowheadColor: neutralLine,
+       nodeBorder: neutralBorder,
+       textColor: isDark ? "#f4f4f5" : "#18181b",
+       clusterBkg: isDark ? "#121214" : "#fafafa",
+       clusterBorder: isDark ? "#27272a" : "#e4e4e7",
+     },
+   });
+   ```
+
+2. **SVG Wrapper Scale & Zero Left Margin**: Align diagrams flush with the document content, prevent oversized scaling, and strip SVG filters:
+   ```tsx
+   className =
+     "mermaid-wrapper my-4 flex w-full justify-start overflow-x-auto rounded-lg border border-fd-border bg-fd-card/30 p-4 shadow-xs [&>svg]:m-0! [&>svg]:max-w-135 [&>svg]:w-auto [&>svg]:h-auto [&_rect]:filter-none! [&_polygon]:filter-none! [&_circle]:filter-none! [&_.node_rect]:stroke-[1.25px]!";
+   ```
+
+   - `[&>svg]:m-0!` and `themeCSS: 'margin: 0 !important;'`: Eliminates weird left margins caused by Mermaid's default `margin: auto` injection inside flex containers.
+   - `justify-start` & `w-full`: Aligns the container and diagram naturally with text and code blocks (no awkward `mx-auto` indentation).
+   - `[&>svg]:max-w-[540px] [&>svg]:w-auto`: Prevents diagrams from blowing up to oversized billboard dimensions.
+   - `[&_rect]:filter-none! [&_polygon]:filter-none! [&_circle]:filter-none!`: Strips SVG drop-shadow filters from all diagram shapes.
+   - `[&_.node_rect]:stroke-[1.25px]!`: Forces solid, crisp 1.25px borders across all node bounding boxes.
+3. **Sanitize React `useId()`**: React's `useId()` produces colons (`:r1:`) which trigger `DOMException: '#:r1:' is not a valid selector` in Mermaid. Always sanitize: `id = 'mermaid-' + useId().replace(/[^a-zA-Z0-9_-]/g, '')`.
 
 - Use `flowchart`, `sequenceDiagram`, `timeline`, `graph`, or `classDiagram` as needed.
 - **Always** quote node labels containing special characters: `A["Label (Info)"]`.
-- Prefer `LR` (left-to-right) for linear flows, `TD` (top-down) for hierarchies.
+- Prefer `LR` (left-to-right) for linear flows to keep vertical footprint compact.
 
 ### 4.4 Code Blocks
 
 - Always specify the language: ` ```typescript `, ` ```solidity `, ` ```bash `, etc.
-- Use `title="filename.ts"` for named code blocks: ` ```typescript title="config.ts" ```
+- Use `title="filename.ts"` for named code blocks: ` `typescript title="config.ts" `
 - Fumadocs renders code blocks with Shiki syntax highlighting and a copy button automatically.
 
 ### 4.5 Tables
@@ -213,11 +281,11 @@ Every folder **must** have an `index.mdx` that:
 
 ### 4.6 Callout Types
 
-| Type | Use For |
-| :--- | :--- |
-| `info` | Supplementary context, background knowledge, definitions |
-| `warn` | Trade-offs, potential pitfalls, things to be careful about |
-| `error` | Breaking changes, critical bugs, dangerous operations |
+| Type    | Use For                                                    |
+| :------ | :--------------------------------------------------------- |
+| `info`  | Supplementary context, background knowledge, definitions   |
+| `warn`  | Trade-offs, potential pitfalls, things to be careful about |
+| `error` | Breaking changes, critical bugs, dangerous operations      |
 
 ---
 
@@ -262,20 +330,20 @@ Every folder **must** have an `index.mdx` that:
 
 ## 7. Anti-Patterns to Avoid
 
-| Anti-Pattern | Why It's Bad | Fix |
-| :--- | :--- | :--- |
-| Repeating parent section/folder name in child titles (stuttering) | Degrades sidebar scannability, wastes horizontal space causing truncation, and duplicates breadcrumb/switcher context (e.g., 'Auth > Auth Overview') | Strip the parent prefix: use 'Overview', 'Quickstart', 'Configuration', 'Architecture' |
-| Plain bulleted link list for navigation | Looks like a plain README, not a docs site | Use `<Cards>` with icons |
-| Raw LaTeX dollar signs for math/Big-O (`$O(n)$`, `$k$`, `$\le$`) | MDX without KaTeX/MathJax plugins renders literal `$` signs, and braces like `${...}` or `2^{h+1}` trigger Acorn JSX syntax errors | Use inline code backticks: `` `O(1)` ``, `` `O(n)` ``, `` `O(log n)` ``, `` `k` ``, `` `<= e` `` |
-| Relying on Mermaid without configuring a renderer | Fenced ```` ```mermaid ```` blocks render as plain raw code text | Install `beautiful-mermaid` and configure `CustomPre` + `<Mermaid>` in `press.config.tsx` |
-| Ordered list for setup instructions | Missing visual step indicators | Use `<Steps>` / `<Step>` |
-| Bold text for warnings | Easy to miss, no visual weight | Use `<Callout type="warn">` |
-| Multiple code blocks for package manager variants | Cluttered, repetitive | Use `<Tabs>` with npm/pnpm/yarn |
-| ASCII art for diagrams | Breaks on different screens, ugly | Use Mermaid fenced blocks or `<Mermaid>` |
-| No `description` in frontmatter | Empty subtitle, bad SEO | Always provide description |
-| Manual `# Title` heading | Duplicates the rendered frontmatter title | Remove manual `# Title` |
-| Walls of text with no components | Unscalable, hard to scan | Break with `<Callout>`, tables, diagrams |
-| Putting static FAQ text in cards | Cards are for navigation, not content | Use `<Accordions>` |
+| Anti-Pattern                                                      | Why It's Bad                                                                                                                                         | Fix                                                                                              |
+| :---------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------- |
+| Repeating parent section/folder name in child titles (stuttering) | Degrades sidebar scannability, wastes horizontal space causing truncation, and duplicates breadcrumb/switcher context (e.g., 'Auth > Auth Overview') | Strip the parent prefix: use 'Overview', 'Quickstart', 'Configuration', 'Architecture'           |
+| Plain bulleted link list for navigation                           | Looks like a plain README, not a docs site                                                                                                           | Use `<Cards>` with icons                                                                         |
+| Raw LaTeX dollar signs for math/Big-O (`$O(n)$`, `$k$`, `$\le$`)  | MDX without KaTeX/MathJax plugins renders literal `$` signs, and braces like `${...}` or `2^{h+1}` trigger Acorn JSX syntax errors                   | Use inline code backticks: `` `O(1)` ``, `` `O(n)` ``, `` `O(log n)` ``, `` `k` ``, `` `<= e` `` |
+| Relying on Mermaid without configuring a renderer                 | Fenced ` ```mermaid ` blocks render as plain raw code text                                                                                           | Install `beautiful-mermaid` and configure `CustomPre` + `<Mermaid>` in `press.config.tsx`        |
+| Ordered list for setup instructions                               | Missing visual step indicators                                                                                                                       | Use `<Steps>` / `<Step>`                                                                         |
+| Bold text for warnings                                            | Easy to miss, no visual weight                                                                                                                       | Use `<Callout type="warn">`                                                                      |
+| Multiple code blocks for package manager variants                 | Cluttered, repetitive                                                                                                                                | Use `<Tabs>` with npm/pnpm/yarn                                                                  |
+| ASCII art for diagrams                                            | Breaks on different screens, ugly                                                                                                                    | Use Mermaid fenced blocks or `<Mermaid>`                                                         |
+| No `description` in frontmatter                                   | Empty subtitle, bad SEO                                                                                                                              | Always provide description                                                                       |
+| Manual `# Title` heading                                          | Duplicates the rendered frontmatter title                                                                                                            | Remove manual `# Title`                                                                          |
+| Walls of text with no components                                  | Unscalable, hard to scan                                                                                                                             | Break with `<Callout>`, tables, diagrams                                                         |
+| Putting static FAQ text in cards                                  | Cards are for navigation, not content                                                                                                                | Use `<Accordions>`                                                                               |
 
 ---
 
@@ -287,13 +355,13 @@ registered via the MDX component map, typically in `src/components/mdx.tsx`).
 If you need to use a component in a `.tsx` file (not MDX), import from:
 
 ```typescript
-import { Step, Steps } from 'fumadocs-ui/components/steps';
-import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
-import { File, Files, Folder } from 'fumadocs-ui/components/files';
-import { InlineTOC } from 'fumadocs-ui/components/inline-toc';
+import { Step, Steps } from "fumadocs-ui/components/steps";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import { File, Files, Folder } from "fumadocs-ui/components/files";
+import { InlineTOC } from "fumadocs-ui/components/inline-toc";
 ```
 
 ### Fumapress Component Registration (`press.config.tsx`)
@@ -301,12 +369,12 @@ import { InlineTOC } from 'fumadocs-ui/components/inline-toc';
 In Fumapress, `defaultMdxComponents` only provides basic HTML tags, `Card`, `Cards`, and `Callout`. To make `<Tabs>`, `<Steps>`, `<Accordions>`, `<Files>`, Lucide icons, and custom components like `<Mermaid>` globally available without manual imports in every `.mdx` file, configure `getMdxComponents`:
 
 ```typescript
-import defaultMdxComponents, { createRelativeLink } from 'fumadocs-ui/mdx';
-import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
-import { Step, Steps } from 'fumadocs-ui/components/steps';
-import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
-import { File, Files, Folder } from 'fumadocs-ui/components/files';
-import { Mermaid } from './src/components/mermaid';
+import defaultMdxComponents, { createRelativeLink } from "fumadocs-ui/mdx";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+import { Step, Steps } from "fumadocs-ui/components/steps";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import { File, Files, Folder } from "fumadocs-ui/components/files";
+import { Mermaid } from "./src/components/mermaid";
 
 export default defineConfig({
   // ...
@@ -328,6 +396,6 @@ export default defineConfig({
         Folder,
       };
     },
-  })
+  }),
 );
 ```

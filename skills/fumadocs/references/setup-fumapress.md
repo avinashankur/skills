@@ -143,7 +143,7 @@ export function Mermaid({ chart, children, className = "", ...props }: { chart?:
     });
     return (
       <div
-        className={`my-6 flex justify-center overflow-x-auto rounded-xl border border-fd-border bg-fd-card/50 p-6 shadow-xs [&>svg]:max-w-full [&>svg]:h-auto ${className}`}
+        className={`mermaid-wrapper my-6 flex justify-center overflow-x-auto rounded-xl border border-fd-border bg-fd-card/50 p-6 shadow-xs [&>svg]:max-w-full [&>svg]:h-auto [&_rect]:filter-none! [&_polygon]:filter-none! [&_circle]:filter-none! [&_.node_rect]:stroke-[1.25px]! ${className}`}
         dangerouslySetInnerHTML={{ __html: svg }}
         {...props}
       />

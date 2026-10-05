@@ -1,6 +1,11 @@
-# Root Section / Framework Switcher Setup Guide (Fumapress & Fumadocs)
+# Root Section / Framework Switcher Setup Guide (Fumapress)
 
-This guide explains how to implement a persistent root-level section or framework switcher dropdown (e.g., switching between **Guides**, **API Reference**, or distinct frameworks/products) in Fumapress and Fumadocs. It addresses the default behaviors where the switcher disappears on the root route (`/`) and duplicate collapsible folder toggles render beneath it, and provides a complete, type-safe implementation.
+> [!WARNING]
+> **Strictly for Fumapress (Waku) & May Be Stale**:
+> This document is strictly for Fumapress (`press.config.tsx` / Waku) setups and contains legacy workarounds that may be stale.
+> For standard **Fumadocs (Next.js)**, do **not** use this guide — use the official, zero-hack pattern documented in [Official Folder Group Root Tabs & Subject Switcher Guide](./folder-group-root-tabs.md).
+
+This guide explains how to implement a persistent root-level section or framework switcher dropdown (e.g., switching between **Guides**, **API Reference**, or distinct frameworks/products) in Fumapress. It addresses the default behaviors where the switcher disappears on the root route (`/`) and duplicate collapsible folder toggles render beneath it, and provides a complete, type-safe implementation for `press.config.tsx`.
 
 > **Project Agnostic Note**: In the code examples throughout this reference, `/collections` (as the default section) and `/oops` (as a secondary section) are used as concrete illustrations. The architecture applies identically to any domain (e.g., `/guides`, `/api`, `/sdk`, `/frontend`, `/backend`). Substitute your project's section folder names and URLs accordingly.
 

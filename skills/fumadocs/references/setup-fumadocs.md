@@ -64,7 +64,7 @@ Wrap the app with `RootProvider` from `fumadocs-ui/provider/next`.
 
 Uses `DocsLayout` from `fumadocs-ui/layouts/docs` with the page tree.
 
-> For multi-section or framework switchers across root tabs, see [Root Section Switcher Setup Guide](./setup-section-switcher.md) for how Fumadocs tab grouping, `$folder` unbinding, and page tree scoping work.
+> For multi-section or framework switchers across root tabs in Next.js, see [Official Folder Group Root Tabs Guide](./folder-group-root-tabs.md). *(Note: `setup-section-switcher.md` is strictly for Fumapress / Waku and may be stale).*
 
 ### 6. `src/app/docs/[[...slug]]/page.tsx`
 
@@ -72,10 +72,15 @@ Catch-all route that renders individual doc pages using:
 - `DocsPage`, `DocsTitle`, `DocsDescription`, `DocsBody` from `fumadocs-ui/layouts/docs/page`
 - The MDX component map
 
-### 7. `src/components/mdx.tsx`
+### 7. `src/components/mdx.tsx` & `src/components/mermaid.tsx`
 
-Registers all interactive components (Callout, Tabs, Steps, Cards, etc.) for global
+Registers all interactive components (Callout, Tabs, Steps, Cards, Mermaid, etc.) for global
 availability in MDX. Uses `defaultMdxComponents` from `fumadocs-ui/mdx` as a base.
+
+For Mermaid diagrams without blurry shadows or uneven gradient borders:
+- Implement `src/components/mermaid.tsx` with `look: 'classic'`, `theme: 'base'`, and `themeVariables: { useGradient: false, dropShadow: 'none' }`.
+- Add container SVG overrides: `[&_rect]:filter-none! [&_polygon]:filter-none! [&_circle]:filter-none! [&_.node_rect]:stroke-[1.25px]!`.
+- Register `Mermaid` inside `getMDXComponents`.
 
 ### 8. `src/app/global.css`
 
