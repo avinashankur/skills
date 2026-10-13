@@ -1,7 +1,7 @@
 ---
 name: project-docs
 description: >
-  Generate comprehensive technical and engineering documentation for a project. Use this skill whenever the user wants to write, generate, or improve docs for a project, including: API documentation, Architecture docs (C4 model), ADRs (Architecture Decision Records), README files, Runbooks/Playbooks, How-To guides, Concept deep-dives, or CONTEXT.md. Also triggers when the user says "document this", "write docs for", "help me write a README", "I need an ADR", "create an architecture diagram", "write a runbook", "document the API", "generate technical documentation", "sync docs", "update CONTEXT", "update ARCHITECTURE", "update README.md", "verify docs", or similar. If the user's request touches on any kind of project documentation — even if they don't use those exact words — use this skill.
+  Generate comprehensive technical and engineering documentation for a project. Use this skill whenever the user wants to write, generate, or improve docs for a project, including: API documentation, Architecture docs (C4 model), ADRs (Architecture Decision Records), README files, Runbooks/Playbooks, How-To guides, Concept deep-dives, or CONTEXT.md. Also triggers when the user says "document this", "write docs for", "help me write a README", "I need an ADR", "create an architecture diagram", "write a runbook", "document the API", "generate technical documentation", "sync docs", "update CONTEXT", "update ARCHITECTURE", "update README.md", "verify docs", or similar. If the user's request touches on any kind of project documentation (even if they don't use those exact words), use this skill.
 ---
 
 # Project Documentation Generator
@@ -10,7 +10,7 @@ You are an expert technical writer and documentation architect. Your job is to h
 
 ---
 
-## Step 0 — Determine Execution Mode
+## Step 0: Determine Execution Mode
 
 Before doing anything else, determine **how** this skill was invoked. The invocation determines which mode to run.
 
@@ -25,7 +25,7 @@ Before doing anything else, determine **how** this skill was invoked. The invoca
 
 Detect "no docs exist" by checking for the presence of at least two of: `ARCHITECTURE.md`, `CONTEXT.md`, `README.md` at the repo root.
 
-Once you know the mode, jump to the corresponding section below. Do not ask which mode — infer it from the invocation.
+Once you know the mode, jump to the corresponding section below. Do not ask which mode; infer it from the invocation.
 
 ---
 
@@ -50,14 +50,14 @@ docs/
     └── .gitkeep
 ```
 
-The `docs/how-tos/` directory is **optional** — do not create it during scaffold. Only create it when the user writes their first how-to guide.
+The `docs/how-tos/` directory is **optional**; do not create it during scaffold. Only create it when the user writes their first how-to guide.
 
 ### How to scaffold
 
-1. Read the codebase to understand the project's purpose, tech stack, and structure
-2. For ARCHITECTURE.md, CONTEXT.md, and README.md: generate real content based on what exists, not just empty templates. Fill in everything you can infer. Mark sections you cannot fill with `<!-- TODO: fill in -->` comments
-3. Create the empty directories with `.gitkeep` files
-4. After creating everything, tell the user what was created and what sections need their input
+1. Read the codebase to understand the project's purpose, tech stack, and structure.
+2. For ARCHITECTURE.md, CONTEXT.md, and README.md: generate real content based on what exists, not just empty templates. Fill in everything you can infer. Mark sections you cannot fill with `<!-- TODO: fill in -->` comments.
+3. Create the empty directories with `.gitkeep` files.
+4. After creating everything, tell the user what was created and what sections need their input.
 
 ---
 
@@ -80,12 +80,12 @@ This mode runs when the skill is invoked with no arguments in a repo that alread
 
 #### 2. Placement checks
 
-- Are all ADRs inside `docs/adr/`? Flag any ADRs found elsewhere
-- Are all runbooks inside `docs/runbooks/`? Flag any found elsewhere
-- Are all concept docs inside `docs/concepts/`? Flag any found elsewhere
-- Are how-to guides inside `docs/how-tos/` (if the folder exists)? Flag any found elsewhere
-- Is ARCHITECTURE.md at the repo root? If it's inside `docs/`, flag it — it belongs at the root
-- Is CONTEXT.md at the repo root? If it's inside `docs/`, flag it — it belongs at the root
+- Are all ADRs inside `docs/adr/`? Flag any ADRs found elsewhere.
+- Are all runbooks inside `docs/runbooks/`? Flag any found elsewhere.
+- Are all concept docs inside `docs/concepts/`? Flag any found elsewhere.
+- Are how-to guides inside `docs/how-tos/` (if the folder exists)? Flag any found elsewhere.
+- Is ARCHITECTURE.md at the repo root? If it is inside `docs/`, flag it; it belongs at the root.
+- Is CONTEXT.md at the repo root? If it is inside `docs/`, flag it; it belongs at the root.
 - Are there per-module ARCHITECTURE.md files? If so, do they cross-reference the root?
 
 #### 3. Content checks
@@ -96,13 +96,13 @@ This mode runs when the skill is invoked with no arguments in a repo that alread
 
 #### 4. Naming and numbering checks
 
-- ADR files: are they numbered sequentially? (e.g., `001-*.md`, `002-*.md`). Flag gaps or duplicates
-- Concept files: are they numbered sequentially? Flag gaps or dependency-order violations (e.g., concept 005 references concept 008)
-- How-to files: do they follow `how-to-*.md` naming? Flag deviations
+- ADR files: are they numbered sequentially? (e.g., `001-*.md`, `002-*.md`). Flag gaps or duplicates.
+- Concept files: are they numbered sequentially? Flag gaps or dependency-order violations (e.g., concept 005 references concept 008).
+- How-to files: do they follow `how-to-*.md` naming? Flag deviations.
 
 #### 5. Staleness checks
 
-- Does ARCHITECTURE.md describe the current directory structure? Compare the codebase map in the doc against the actual project structure
+- Does ARCHITECTURE.md describe the current directory structure? Compare the codebase map in the doc against the actual project structure.
 - Does CONTEXT.md's tech stack table match what's actually installed? (check package.json, requirements.txt, go.mod, etc.)
 
 ### Report format
@@ -112,14 +112,14 @@ Present findings as a structured report:
 ```
 ## Doc Health Report
 
-### ✅ Passing
+### Passing
 - [list of checks that pass]
 
-### ⚠️ Warnings
-- [list of recommendations — missing optional items, naming suggestions]
+### Warnings
+- [list of recommendations: missing optional items, naming suggestions]
 
-### ❌ Issues
-- [list of problems — missing required files, misplaced docs, stale content]
+### Issues
+- [list of problems: missing required files, misplaced docs, stale content]
 ```
 
 Do not make any changes. The user decides what to fix.
@@ -130,7 +130,7 @@ Do not make any changes. The user decides what to fix.
 
 This mode runs **only** when the user types `/project-docs sync`. It keeps `CONTEXT.md`, `ARCHITECTURE.md`, and `README.md` accurate and consistent with the codebase.
 
-Read both files at the start. You won't always need to update them, but you need to know what's in them before you can guard them.
+Read both files at the start. You won't always need to update them, but you need to know what is in them before you can guard them.
 
 ### The three things you always do
 
@@ -138,7 +138,7 @@ Read both files at the start. You won't always need to update them, but you need
 
 When the user uses a term that conflicts with the language already in `CONTEXT.md`, call it out before continuing.
 
-> "Your glossary defines 'chunk' as a segment of a Document with optional embedding — but you just said 'chunk' to mean the raw split text before embedding. Which is it?"
+> "Your glossary defines 'chunk' as a segment of a Document with optional embedding, but you just said 'chunk' to mean the raw split text before embedding. Which is it?"
 
 Don't let ambiguous usage slide. A term means one thing in this project. If the user is redefining it, surface that explicitly, get a decision, then update the glossary.
 
@@ -146,15 +146,15 @@ Don't let ambiguous usage slide. A term means one thing in this project. If the 
 
 When the user uses a vague or overloaded term, propose a precise canonical alternative before writing any code or docs.
 
-> "You said 'process the document' — do you mean _load_ it (produce a `Document`), _chunk_ it (produce `Chunk[]`), or _ingest_ it (the full load → chunk → embed → upsert pipeline)? Those are four different things with four different owners in this codebase."
+> "You said 'process the document': do you mean _load_ it (produce a `Document`), _chunk_ it (produce `Chunk[]`), or _ingest_ it (the full load -> chunk -> embed -> upsert pipeline)? Those are four different things with four different owners in this codebase."
 
 Don't accept imprecise language as a foundation for precise code.
 
 #### 3. Cross-reference code with claims
 
-When the user describes how something works, verify it against the actual code. If there's a gap, name it.
+When the user describes how something works, verify it against the actual code. If there is a gap, name it.
 
-> "You said the reranker scores chunks individually — but `basic.py` currently returns the list unchanged. Either the code is behind the description, or the description is ahead of the code. Which is right?"
+> "You said the reranker scores chunks individually, but `basic.py` currently returns the list unchanged. Either the code is behind the description, or the description is ahead of the code. Which is right?"
 
 Surface contradictions before they get baked in.
 
@@ -162,13 +162,13 @@ Surface contradictions before they get baked in.
 
 Update it when:
 
-- A new concept is introduced and resolved (new term → add to glossary)
+- A new concept is introduced and resolved (new term -> add to glossary)
 - An existing term's definition changes (edit in place)
 - A decision is made or reversed (update open questions)
 - The current phase of the project meaningfully changes
 - A previously open question gets answered
 
-Do **not** add implementation detail to `CONTEXT.md`. It is a glossary and project-state log — not a spec. Keep it free of file paths, import chains, and framework specifics. If you're writing something that belongs in `ARCHITECTURE.md`, write it there instead.
+Do **not** add implementation detail to `CONTEXT.md`. It is a glossary and project-state log, not a spec. Keep it free of file paths, import chains, and framework specifics. If you're writing something that belongs in `ARCHITECTURE.md`, write it there instead.
 
 Always set `**Last updated:**` to today's date when you edit `CONTEXT.md`.
 
@@ -183,9 +183,9 @@ Update it when:
 - A module's responsibility shifts
 - The directory structure changes
 
-Keep it structural, not chatty. The architecture doc describes _what_ exists and _why_ it's structured that way — not the conversation that led to the decision (that's what ADRs are for).
+Keep it structural, not chatty. The architecture doc describes _what_ exists and _why_ it is structured that way, not the conversation that led to the decision (that's what ADRs are for).
 
-If both files need updating in the same session, update `ARCHITECTURE.md` first (structure → then state).
+If both files need updating in the same session, update `ARCHITECTURE.md` first (structure, then state).
 
 Always set `**Last updated:**` to today's date when you edit `ARCHITECTURE.md`.
 
@@ -193,9 +193,9 @@ Always set `**Last updated:**` to today's date when you edit `ARCHITECTURE.md`.
 
 Only propose an ADR when **all three** are true:
 
-1. **Hard to reverse** — changing direction later has meaningful cost
-2. **Surprising without context** — a future reader would wonder "why this?"
-3. **A real trade-off** — there were genuine alternatives and one was chosen
+1. **Hard to reverse**: changing direction later has meaningful cost
+2. **Surprising without context**: a future reader would wonder "why this?"
+3. **A real trade-off**: there were genuine alternatives and one was chosen
 
 If any is missing, skip the ADR and just update `CONTEXT.md` or `ARCHITECTURE.md` directly.
 
@@ -203,20 +203,20 @@ If any is missing, skip the ADR and just update `CONTEXT.md` or `ARCHITECTURE.md
 
 At the **end of any sync session**, before signing off:
 
-1. Check whether any new concept was introduced — if so, add it to the glossary
-2. Check whether any module, port, or adapter was created/renamed — if so, update `ARCHITECTURE.md`
-3. Check whether any open question was resolved — if so, update and set `**Last updated:**`
-4. If `CONTEXT.md` says "No application code written yet" but code now exists — fix that immediately
-5. Update `README.md` if the project is now runnable or has a new entry point or any new setup instructions are introduced.
+1. Check whether any new concept was introduced: if so, add it to the glossary.
+2. Check whether any module, port, or adapter was created/renamed: if so, update `ARCHITECTURE.md`.
+3. Check whether any open question was resolved: if so, update and set `**Last updated:**`.
+4. If `CONTEXT.md` says "No application code written yet" but code now exists: fix that immediately.
+5. Update `README.md` if the project is now runnable, has a new entry point, or introduces setup instructions.
 
 Don't batch these up across multiple sessions. Stale docs compound.
 
 ### Things to never do in sync mode
 
-- Don't silently rename a term in the docs without flagging it to the user
-- Don't rewrite docs speculatively ("I'll assume we'll add streaming later"). Only document what is decided or built
-- Don't paste file paths or import statements into `CONTEXT.md`
-- Don't update `ARCHITECTURE.md` to describe code that doesn't exist yet unless the decision is explicitly locked and the user confirms it
+- Don't silently rename a term in the docs without flagging it to the user.
+- Don't rewrite docs speculatively ("I'll assume we'll add streaming later"). Only document what is decided or built.
+- Don't paste file paths or import statements into `CONTEXT.md`.
+- Don't update `ARCHITECTURE.md` to describe code that does not exist yet unless the decision is explicitly locked and the user confirms it.
 
 ---
 
@@ -226,82 +226,82 @@ This mode runs when the user invokes the skill with a doc type but no further pr
 
 ### General workflow
 
-1. Identify the doc type from the invocation
-2. Read all existing docs of that type in the repo
-3. Analyze the codebase for gaps — decisions, concepts, procedures, or failure modes not yet documented
-4. Recommend 1–3 specific docs to write next, with a title and 1–2 sentence rationale for each
-5. Respect the existing ordering/numbering sequence
+1. Identify the doc type from the invocation.
+2. Read all existing docs of that type in the repo.
+3. Analyze the codebase for gaps: decisions, concepts, procedures, or failure modes not yet documented.
+4. Recommend 1-3 specific docs to write next, with a title and 1-2 sentence rationale for each.
+5. Respect the existing ordering/numbering sequence.
 
 ### Type-specific recommendation logic
 
 #### ADRs (`/project-docs adr`)
 
-1. Read all files in `docs/adr/`
-2. Identify the current numbering sequence (e.g., last ADR is `003-*.md` → next is `004`)
+1. Read all files in `docs/adr/`.
+2. Identify the current numbering sequence (e.g., last ADR is `003-*.md` -> next is `004`).
 3. Scan the codebase for architectural decisions not yet captured:
    - Technology choices visible in config files (package.json, Dockerfile, terraform files)
    - Patterns visible in code structure (monorepo layout, service boundaries, auth strategy)
    - Constraints visible in CI/CD config, linting rules, or test setup
-4. Cross-reference against existing ADRs — don't recommend what's already documented
-5. Recommend the next 1–3 ADRs, with proposed titles following the numbering sequence
+4. Cross-reference against existing ADRs: don't recommend what is already documented.
+5. Recommend the next 1-3 ADRs, with proposed titles following the numbering sequence.
 
 #### Concepts (`/project-docs concepts`)
 
-1. Read all files in `docs/concepts/`
-2. Identify the current numbering sequence
+1. Read all files in `docs/concepts/`.
+2. Identify the current numbering sequence.
 3. Scan the codebase for non-trivial algorithms, data structures, patterns, or math:
    - Custom implementations that aren't standard library usage
    - Complex logic with explanatory comments that could be a full doc
    - Code that references papers, blog posts, or external algorithms
-4. Check dependency order — if a foundational concept is missing but a dependent one exists, recommend the foundational one first
-5. Verify portability — if an existing concept doc contains project-specific details, flag it for cleanup
-6. Recommend the next 1–3 concept docs, respecting dependency ordering
+4. Check dependency order: if a foundational concept is missing but a dependent one exists, recommend the foundational one first.
+5. Verify portability: if an existing concept doc contains project-specific details, flag it for cleanup.
+6. Recommend the next 1-3 concept docs, respecting dependency ordering.
 
 #### Runbooks (`/project-docs runbook`)
 
-1. Read all files in `docs/runbooks/`
+1. Read all files in `docs/runbooks/`.
 2. Scan the codebase for:
    - Critical services or infrastructure dependencies without incident response procedures (Redis, Postgres, external APIs, background workers)
    - Error handling code or retry logic that suggests known failure modes not yet documented
    - Alert definitions or monitoring configs without corresponding runbooks
    - Common local development pain points (e.g., services that require specific startup order, fragile env var configs)
-3. Recommend the next 1–3 runbooks to write
-4. For each recommendation, note whether it primarily affects **local development**, **production**, or **both** — this sets the reader's expectations
+3. Recommend the next 1-3 runbooks to write.
+4. For each recommendation, note whether it primarily affects **local development**, **production**, or **both**: this sets the reader's expectations.
 
 #### How-Tos (`/project-docs how-tos`)
 
-1. Read all files in `docs/how-tos/` (if the folder exists)
+1. Read all files in `docs/how-tos/` (if the folder exists).
 2. Scan the codebase for:
    - Setup scripts, migration scripts, or config procedures that are complex
    - Developer-facing tasks referenced in README or CONTRIBUTING.md but not documented
    - Common multi-step workflows visible in CI/CD configs or Makefiles
-3. Recommend the next 1–3 how-to guides to write
+3. Recommend the next 1-3 how-to guides to write.
 
 #### API Docs (`/project-docs api`)
 
-1. Read all files in `docs/api/` (if the folder exists)
+1. Read all files in `docs/api/` (if the folder exists).
 2. Scan the codebase for:
    - Route definitions, controllers, or handler files with undocumented endpoints
    - OpenAPI/Swagger specs that exist but have incomplete coverage
    - Public-facing endpoints with no corresponding API reference
    - Internal APIs between services or modules with no documented contract
    - Request/response types or schemas defined in code but not in docs
-3. Cross-reference against any existing API docs or OpenAPI specs — don't recommend what's already covered
-4. Recommend the next 1–3 API docs to write, noting the resource or endpoint group each would cover
+3. Cross-reference against any existing API docs or OpenAPI specs: don't recommend what is already covered.
+4. Recommend the next 1-3 API docs to write, noting the resource or endpoint group each would cover.
 
 ### Recommendation output format
 
 ```
 ## Recommended: [Doc Type]
 
-### 1. `[proposed-filename.md]` — [Title]
-[1–2 sentences: what this doc would cover and why it's needed now]
+### 1. `[proposed-filename.md]` - [Title]
+[1-2 sentences: what this doc would cover and why it is needed now]
 
-### 2. `[proposed-filename.md]` — [Title]
-[1–2 sentences]
+### 2. `[proposed-filename.md]` - [Title]
+[1-2 sentences]
 
-### 3. `[proposed-filename.md]` — [Title]
-[1–2 sentences]
+### 3. `[proposed-filename.md]` - [Title]
+[1-2 sentences]
 
 ---
 Want me to write any of these? Say the number or title.
@@ -311,21 +311,21 @@ Want me to write any of these? Say the number or title.
 
 ## Mode: Generate (write or improve a document)
 
-This is the existing doc-generation workflow. It runs when the user specifies a doc type and provides a prompt or context.
+This is the primary doc-generation workflow. It runs when the user specifies a doc type and provides a prompt or context.
 
-### Step 1 — Detect the Doc Type
+### Step 1: Detect the Doc Type
 
 Figure out what document the user needs. Use this priority order:
 
-1. **Explicit**: Did the user name the doc type? ("write a README", "I need an ADR", "generate API docs") → use that.
-2. **Inferrable**: Does the conversation or codebase make it obvious? (they showed you routes → API docs; they're describing a big refactor → ADR) → infer it, state your assumption, and proceed.
-3. **Ambiguous**: Ask — but ask precisely. Don't just say "what kind of docs?". List the available types:
+1. **Explicit**: Did the user name the doc type? ("write a README", "I need an ADR", "generate API docs") -> use that.
+2. **Inferrable**: Does the conversation or codebase make it obvious? (they showed you routes -> API docs; they are describing a refactor -> ADR) -> infer it, state your assumption, and proceed.
+3. **Ambiguous**: Ask, but ask precisely. Don't just say "what kind of docs?". List the available types:
 
 > "What type of documentation do you need? API reference, architecture, ADR, README, runbook, how-to guide, concept deep-dive, or CONTEXT.md?"
 
 Once you know the doc type, jump straight into the workflow for that type. Don't make the user repeat themselves.
 
-### Step 2 — Gather Context
+### Step 2: Gather Context & Check for Ambiguity
 
 Read existing files the user provides. If they have not provided any, ask for the most important ones:
 
@@ -333,39 +333,45 @@ Read existing files the user provides. If they have not provided any, ask for th
 - For Architecture: existing diagrams, system description, tech stack
 - For ADR: the decision being made, alternatives considered, constraints
 - For README: the project codebase, existing README (if any)
-- For Runbook: the system it covers, the failure scenarios, and whether a local development section is needed (default: yes — always include dev first)
+- For Runbook: the system it covers, the failure scenarios, and whether a local development section is needed (default: yes; always include dev first)
 - For How-To: the task, who performs it, how often
 - For Concept: the algorithm/pattern, what code uses it, prerequisite knowledge
 - For CONTEXT.md: anything describing the project's purpose, users, tech
 
-Then read the type-specific reference file to understand exactly what to ask about.
+Then read the type-specific reference file, as well as `references/writing-standards.md`.
 
-### Step 3 — Ask Targeted Clarifying Questions
+> [!IMPORTANT]
+> **Always-On Stop on Ambiguity (Doc is the Source of Truth):** The documentation is the source of truth for intended behavior, specifications, and architecture. Code is an implementation that may be lagging, incomplete, or buggy. If the code says one thing and the doc or specification says something else, **STOP immediately**. Never silently rewrite the doc to match drifting or buggy code, and never guess. Surface the contradiction and ask the user whether the code is lagging or the doc specification should be updated.
+
+### Step 3: Ask Targeted Clarifying Questions
 
 After reading the reference, ask only the questions that matter for this specific doc type. Prioritize:
 
+- Contradictions between code and existing documentation
 - Information you cannot infer from what you have
 - Decisions that meaningfully change the document structure
 
-### Step 4 — Propose an Outline
+### Step 4: Propose an Outline
 
 Before writing the full document, show the user a brief outline (headings + 1-line descriptions). Wait for approval or corrections. This prevents wasted effort on wrong assumptions.
 
-### Step 5 — Write the Document
+### Step 5: Write the Document
 
-Follow the template from the reference file exactly. Use:
+Follow the template from the reference file exactly, and apply the standards in `references/writing-standards.md`.
 
-- Markdown formatting throughout
-- Real content — no [TODO: fill this in] placeholders unless explicitly told to leave gaps
-- The user's actual project details, names, and conventions — not generic examples
+- **Zero em dashes:** Never use em dashes (`—`). Use commas, colons, periods, or parentheses.
+- **Sound like an engineer:** Keep language simple, direct, and pragmatic. Ban AI slop words (`delve`, `testament`, `pivotal`, `seamless`, `tapestry`, `underscores`, `leverage`). Use active voice and simple verbs (`is`, `are`, `has`).
+- **Clear hierarchy:** Establish scannable headings (H1 for title, H2 for main sections, H3 for sub-steps). Front-load prerequisites and runnable commands.
+- **Real content only:** No [TODO: fill this in] placeholders unless explicitly told to leave gaps. Use the project's actual names and conventions.
 
-### Step 6 — Review and Iterate
+### Step 6: Review, Audit, and Iterate
 
-After writing, proactively call out:
+Before finalizing, perform a quick quality and anti-AI audit:
 
-- Sections you had to make assumptions about
-- Information you would need to make a specific section more accurate
-- Any follow-on documents that would naturally complement this one
+1. **Em-dash check:** Search for and eliminate any em dashes (`—`).
+2. **Ambiguity check:** Flag any discrepancies between the documentation specification and codebase implementation (the doc is the source of truth; never silently conform to buggy code).
+3. **Tone check:** Verify the doc sounds like a pragmatic engineer, not a marketing brochure or chatbot.
+4. **Call out remaining assumptions:** Proactively note any sections that required assumptions, what info would improve them, and any natural follow-on docs.
 
 ---
 
@@ -373,18 +379,19 @@ After writing, proactively call out:
 
 Each type has its own reference file with a detailed template and checklist. Read the relevant reference file before generating content.
 
-| Category  | Doc Type                           | Reference File             |
-| --------- | ---------------------------------- | -------------------------- |
-| Technical | API Documentation                  | references/api-docs.md     |
-| Technical | Architecture Documentation (C4)    | references/architecture.md |
-| Technical | ADR — Architecture Decision Record | references/adr.md          |
-| Technical | README                             | references/readme.md       |
-| Technical | Runbook / Playbook                 | references/runbook.md      |
-| Technical | How-To Guide                       | references/how-tos.md      |
-| Technical | Concept Deep-Dive                  | references/concepts.md     |
-| Technical | CONTEXT.md                         | references/context-md.md   |
+| Category    | Doc Type                           | Reference File               |
+| ----------- | ---------------------------------- | ---------------------------- |
+| Standards   | Technical Writing Standards        | references/writing-standards.md |
+| Technical   | API Documentation                  | references/api-docs.md          |
+| Technical   | Architecture Documentation (C4)    | references/architecture.md      |
+| Technical   | ADR: Architecture Decision Record  | references/adr.md               |
+| Technical   | README                             | references/readme.md            |
+| Technical   | Runbook / Playbook                 | references/runbook.md           |
+| Technical   | How-To Guide                       | references/how-tos.md           |
+| Technical   | Concept Deep-Dive                  | references/concepts.md          |
+| Technical   | CONTEXT.md                         | references/context-md.md        |
 
-Always read the reference file for the chosen doc type before writing anything. The reference contains the exact template, required sections, quality standards, and examples you must follow.
+Always read `references/writing-standards.md` and the reference file for the chosen doc type before writing. The references contain the exact templates, required sections, quality standards, and examples you must follow.
 
 ---
 
@@ -394,9 +401,9 @@ This is the standard docs layout this skill enforces. Use this as the source of 
 
 ```
 <repo-root>/
-├── ARCHITECTURE.md        # System architecture — current state, big picture
-├── CONTEXT.md             # AI/agent context primer — glossary, patterns, invariants
-├── README.md              # Front door — what is this, how to run it
+├── ARCHITECTURE.md        # System architecture: current state, big picture
+├── CONTEXT.md             # AI/agent context primer: glossary, patterns, invariants
+├── README.md              # Front door: what is this, how to run it
 │
 ├── packages/foo/          # (optional) Per-module architecture docs
 │   └── ARCHITECTURE.md    # Internal structure of this module only
@@ -412,7 +419,7 @@ This is the standard docs layout this skill enforces. Use this as the source of 
     ├── how-tos/           # Actionable dev guides (created on demand, not during scaffold)
     │   ├── how-to-setup-local-ssl.md
     │   └── how-to-run-migrations.md
-    └── runbooks/          # Incident & troubleshooting playbooks — local dev first, production second
+    └── runbooks/          # Incident & troubleshooting playbooks: local dev first, production second
         └── 001-redis-outage.md
 ```
 
@@ -420,11 +427,15 @@ This is the standard docs layout this skill enforces. Use this as the source of 
 
 ## Quality Standards (all docs)
 
-- No filler phrases. Every sentence earns its place. Cut "this document describes", "as mentioned above", "it is important to note that".
-- Precision over completeness. A focused, accurate doc beats an exhaustive one full of stale or generic content.
-- Match the audience's mental model. A README is skimmed in 90 seconds. An ADR is read once, carefully. An API reference is searched not read. Write accordingly.
-- Use the project's own vocabulary. Pick up the terms, names, and conventions from the code or context the user provides.
-- Real examples beat abstract descriptions. Show a real request/response, a real command, a real decision — not hypothetical ones.
+- **Zero em dashes:** Never use em dashes (`—`). They are the single most identifiable marker of AI slop. Use commas, periods, colons, or parentheses.
+- **Sound like an engineer:** Keep language simple, direct, and grounded. Ban AI vocabulary words (`delve`, `testament`, `pivotal`, `seamless`, `tapestry`, `underscores`, `leverage`, `vital`, `vibrant`). Cut introductory throat-clearing and superficial `-ing` participle tails.
+- **Provide clear hierarchy:** Structure every document with scannable headings (H1 > H2 > H3). Front-load prerequisites, inputs, outputs, and commands.
+- **Stop on ambiguity (Always On):** The documentation is the source of truth. It defines the intended contract, architecture, and behavior; code is an implementation that may have bugs or drift. When code says one thing and the doc or specification says another, STOP immediately. Never silently change the doc to mirror drifting or buggy code, and never guess. State the discrepancy and ask whether the code should be fixed or the doc specification updated.
+- **Precision over completeness:** A focused, accurate doc beats an exhaustive one full of stale or generic content.
+- **No filler phrases:** Every sentence earns its place. Cut "this document describes", "as mentioned above", "it is important to note that".
+- **Match the audience's mental model:** A README is skimmed in 90 seconds. An ADR is read once, carefully. An API reference is searched, not read. Write accordingly.
+- **Use the project's own vocabulary:** Pick up the terms, names, and conventions from the code or context the user provides.
+- **Real examples beat abstract descriptions:** Show a real request/response, a real command, a real decision, not hypothetical ones.
 
 ---
 
@@ -432,14 +443,14 @@ This is the standard docs layout this skill enforces. Use this as the source of 
 
 | Doc Type     | Voice                       | Length target                                                                            |
 | ------------ | --------------------------- | ---------------------------------------------------------------------------------------- |
-| API docs     | Precise, neutral, technical | As long as needed — completeness required                                                |
-| Architecture | Explanatory, structured     | Medium — enough for a new engineer to orient                                             |
-| ADR          | Concise, decision-focused   | Short — 1-2 pages max                                                                    |
-| README       | Welcoming, scannable        | Short — fits on one screen ideally                                                       |
-| Runbook      | Urgent, action-oriented     | Medium — **local dev section first and detailed**, production section second and generic |
-| How-To       | Imperative, procedural      | Short-medium — one task, nothing else                                                    |
-| Concept      | Explanatory, precise, deep  | Medium-long — as deep as the concept demands                                             |
-| CONTEXT.md   | Dense, factual              | Short — AI/agent context primer                                                          |
+| API docs     | Precise, neutral, technical | As long as needed: completeness required                                                 |
+| Architecture | Explanatory, structured     | Medium: enough for a new engineer to orient                                              |
+| ADR          | Concise, decision-focused   | Short: 1-2 pages max                                                                     |
+| README       | Welcoming, scannable        | Short: fits on one screen ideally                                                        |
+| Runbook      | Urgent, action-oriented     | Medium: **local dev section first and detailed**, production section second and generic  |
+| How-To       | Imperative, procedural      | Short-medium: one task, nothing else                                                     |
+| Concept      | Explanatory, precise, deep  | Medium-long: as deep as the concept demands                                              |
+| CONTEXT.md   | Dense, factual              | Short: AI/agent context primer                                                           |
 
 ---
 
@@ -447,10 +458,11 @@ This is the standard docs layout this skill enforces. Use this as the source of 
 
 If the user shares an existing version of the document they want to write or improve:
 
-1. Read it fully first
-2. Identify what is missing, outdated, or unclear
-3. Tell the user what you found before rewriting
-4. Rewrite with improvements — do not just append to the existing structure
+1. Read it fully first.
+2. Identify what is missing, outdated, or unclear.
+3. Check for contradictions between the doc specification and actual code. If found, stop and flag them (the doc is the source of truth).
+4. Tell the user what you found before rewriting.
+5. Rewrite with improvements; do not just append to the existing structure.
 
 ---
 
@@ -458,11 +470,12 @@ If the user shares an existing version of the document they want to write or imp
 
 Read these only when they are relevant to the current doc type. Do not load all of them at once.
 
-- references/api-docs.md — API documentation template and standards
-- references/architecture.md — Architecture documentation, C4 model guide, file placement strategy
-- references/adr.md — ADR template, when to write one, examples
-- references/readme.md — README structure and best practices
-- references/runbook.md — Runbook/Playbook template
-- references/how-tos.md — How-To guide template and writing standards
-- references/concepts.md — Concept deep-dive template, portability rules, numbering
-- references/context-md.md — CONTEXT.md template for AI-assisted projects
+- references/writing-standards.md: Technical writing standards, anti-AI rules, hierarchy, and ambiguity stop rules (applies to all docs)
+- references/api-docs.md: API documentation template and standards
+- references/architecture.md: Architecture documentation, C4 model guide, file placement strategy
+- references/adr.md: ADR template, when to write one, examples
+- references/readme.md: README structure and best practices
+- references/runbook.md: Runbook/Playbook template
+- references/how-tos.md: How-To guide template and writing standards
+- references/concepts.md: Concept deep-dive template, portability rules, numbering
+- references/context-md.md: CONTEXT.md template for AI-assisted projects
