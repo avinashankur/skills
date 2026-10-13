@@ -3,52 +3,68 @@ name: git-stage
 description: >
   Analyze uncommitted changes in the working tree, partition related files into
   logical commit-sized changesets, and interactively stage + commit each changeset.
+  Supports creating a new branch and pushing commits to remote.
   Use when the user says "create changesets", "git stage", "smart stage", "what should I
   commit together", "split my changes into commits", "help me commit",
-  "/git-stage", "/smart-stage", or any phrasing about organizing messy uncommitted work
-  into clean, separate commits.
+  "/git-stage", "/git-stage branch", "/git-stage push", "/git-stage branch push",
+  or any phrasing about organizing messy uncommitted work into clean, separate commits.
 ---
 
 # Git Stage
 
-Inspect all uncommitted changes (staged + unstaged + untracked), cluster
+Inspect uncommitted changes (staged + unstaged + untracked), cluster
 them into logical changesets that belong in the same commit, present the changesets
 for approval, and stage + commit each approved changeset one at a time.
+Supports creating a new branch for the changes and pushing commits to remote.
+
+## Command Variants & Intent Detection
+
+Parse the user's invocation to identify the execution mode:
+
+| Command | Action |
+|---|---|
+| `/git-stage` | Stage and commit changesets on current branch (no push). |
+| `/git-stage branch [name]` | Create/switch to a new branch, then stage and commit changesets (no push). |
+| `/git-stage push` | Stage and commit changesets on current branch, then confirm and push to remote. |
+| `/git-stage branch [name] push`<br>`/git-stage push branch [name]` | Create/switch to a new branch, stage and commit changesets, then confirm and push to remote. |
+
+- **Branch mode**: Activated when `branch` is present in the prompt/command. If a branch name is provided (e.g. `/git-stage branch feat/login`), use that name. If no name is provided (`/git-stage branch`), infer one following `references/branch-conventions.md` and confirm with the user.
+- **Push mode**: Activated when `push` is present in the prompt/command. Requires confirmation before running `git push`.
+
+---
 
 ## Step 1 — Collect the full picture
 
-Run these commands to get the complete state:
+Run these commands to get the complete repository state:
 
 ```bash
 git status --short                        # all changed / untracked files
 git diff --stat                           # unstaged diff summary
 git diff --cached --stat                  # already-staged diff summary
-```
-
-If `git status` is clean, stop and tell the user there's nothing to stage.
-
-Also gather context that helps with assembling changesets:
-
-```bash
+git branch --show-current                 # current active branch
+git remote -v                             # configured remotes
 git log --oneline -10                     # recent commits for context
 ```
 
+If `git status` is clean, stop and inform the user there are no uncommitted changes to stage.
+
+---
+
 ## Step 2 — Understand every change
 
-For each changed file, read enough to understand *what* the change is about.
-Use the most efficient approach per file:
+For each changed file, inspect enough context to understand *what* the change does:
 
-- **Modified files**: `git diff <file>` (or `git diff --cached <file>` if staged) — read the diff, not the whole file.
-- **Untracked / new files**: read the file directly (or at least the first ~100 lines and any obvious indicators like package name, component name, imports).
-- **Deleted files**: note the deletion; check `git log -1 -- <file>` for context on what it was.
+- **Modified files**: `git diff <file>` (or `git diff --cached <file>` if staged) — read the diff, not the entire file.
+- **Untracked / new files**: Read the file directly (or the first ~100 lines and structural elements like imports, exports, component/package names).
+- **Deleted files**: Note the deletion; check `git log -1 -- <file>` for context on what it was.
 
-Build a mental model of each change's *purpose* — what feature, fix, chore,
-or refactor does it serve?
+Build a mental model of each change's *purpose* — what feature, fix, chore, or refactor does it serve?
 
-## Step 3 — Assemble changesets
+---
 
-Partition files into changesets where each changeset represents **one logical change**
-that belongs in a single commit. Use these signals:
+## Step 3 — Assemble changesets & branch name
+
+Partition files into changesets where each changeset represents **one logical change** that belongs in a single commit. Use these signals:
 
 | Signal | Weight |
 |---|---|
@@ -59,26 +75,45 @@ that belongs in a single commit. Use these signals:
 
 ### Changeset rules
 
-1. **Don't over-split.** If all changes genuinely serve one purpose, produce
-   **one changeset**. Multiple changesets only when the changes are clearly unrelated.
-   Err on the side of fewer changesets — the user can always split further.
-2. **Don't leave orphans.** Every changed file must appear in exactly one
-   changeset.
-3. **Order changesets** by dependency: if changeset B depends on changeset A's changes
-   (e.g. A adds a utility, B uses it), A comes first.
-4. **Name each changeset** with a short label that could serve as a commit scope
-   (e.g. "shadcn UI setup", "auth page restyling", "docs updates").
-5. **Co-locate documentation with relevant changes.** Do not isolate documentation
-   updates (such as `ARCHITECTURE.md`, `CONTEXT.md`, `README.md`, `DESIGN.md`, or
-   how-to guides) into a separate generic docs commit if they describe or accompany
-   the specific feature, refactor, or UI changes in a changeset. Bundle those docs
-   directly with the corresponding code/feature commit.
+1. **Don't over-split.** If all changes genuinely serve one purpose, produce **one changeset**. Multiple changesets only when changes are clearly unrelated.
+2. **Don't leave orphans.** Every changed file must appear in exactly one changeset.
+3. **Order changesets** by dependency: if changeset B depends on changeset A (e.g. A adds a utility, B uses it), A comes first.
+4. **Name each changeset** with a short label suitable for a commit scope (e.g. "shadcn UI setup", "auth page restyling", "docs updates").
+5. **Co-locate documentation with relevant changes.** Do not isolate documentation updates (e.g. `README.md`, `ARCHITECTURE.md`, `DESIGN.md`) into a separate generic docs commit if they describe or accompany specific feature, refactor, or UI changes. Bundle those docs directly with the corresponding code/feature commit.
 
-## Step 4 — Present the changesets
+### Branch name inference (Branch mode only)
 
-Output the changesets in a clear, scannable format. For each changeset show:
+When **Branch mode** is active and the user did not supply a branch name:
+1. Consult `references/branch-conventions.md`.
+2. Infer the primary change type (`feat/`, `fix/`, `refactor/`, `chore/`, `docs/`, `test/`).
+3. Create a concise 2–4 word kebab-case description based on the dominant changeset (e.g. `feat/branch-support`, `fix/login-token-refresh`).
 
+---
+
+## Step 4 — Present changesets & branch plan
+
+### 4A. Branch setup (if Branch mode)
+
+If the user requested a new branch:
+- **If branch name was provided**: State the target branch (e.g. `Target branch: <name> (new branch)`).
+- **If branch name was inferred**: Present the suggested branch name and use `ask_question` to confirm:
+  - "(Recommended) Create branch '<inferred-name>' and proceed"
+  - "Specify a custom branch name"
+  - "Stay on current branch '<current-branch>' instead"
+
+Once the branch name is confirmed, create and switch to the branch **before staging**:
+
+```bash
+git checkout -b <branch-name>
 ```
+
+*(Git carries dirty working tree changes over to the newly created branch cleanly).*
+
+### 4B. Present the changesets
+
+Output the changesets in a clear, scannable format:
+
+```markdown
 ### Changeset N: <label>
 <1-sentence rationale for why these files belong together>
 
@@ -88,43 +123,33 @@ Files:
 - path/to/file3  (modified)
 ```
 
-After listing all changesets, show a summary table:
+After listing all changesets, display a summary table:
 
 | # | Label | Files |
 |---|---|---|
 | 1 | ... | N |
 | 2 | ... | N |
 
-Then **ask the user** how they'd like to proceed. Use the `ask_question`
-tool with options like:
-
+Then **ask the user** how they would like to proceed using `ask_question`:
 - "Stage and commit all changesets in order"
 - "Let me pick which changesets to commit (by number)"
 - "Walk me through one changeset at a time"
 - "I want to modify the changesets first"
 
-### Batch mode ("all" or "pick by number")
+### Execution modes
 
-If the user approves all changesets, or selects specific ones (e.g. "1, 3, 4"),
-process each approved changeset sequentially **without asking again between
-changesets** — just commit them in dependency order and report progress.
+- **Batch mode ("all" or "pick by number")**: Process approved changesets sequentially without pausing between changesets — commit them in dependency order and report progress.
+- **Interactive mode ("one at a time")**: Prompt before each changeset:
+  - "Yes, stage and commit this changeset"
+  - "Skip this changeset"
+  - "I want to modify this changeset first"
+- **Modify mode**: If the user wants to adjust changesets (reassign files, rename, split, merge), apply modifications and re-present the updated changesets before staging.
 
-### Interactive mode ("one at a time")
-
-Process one changeset at a time, asking before each:
-- "Yes, stage and commit this changeset"
-- "Skip this changeset"
-- "I want to modify this changeset first"
-
-### Modify mode
-
-If the user wants to modify changesets (move files, rename, change message,
-merge two changesets, split one), make the changes and re-present the updated
-changesets before proceeding to staging.
+---
 
 ## Step 5 — Stage and commit (per approved changeset)
 
-For each changeset being committed (whether batch or interactive):
+For each changeset being committed:
 
 1. **Unstage everything first** (safety reset):
    ```bash
@@ -134,18 +159,17 @@ For each changeset being committed (whether batch or interactive):
    ```bash
    git add <file1> <file2> ...
    ```
-3. **Verify** what's staged matches the changeset:
+3. **Verify** staged files:
    ```bash
    git diff --cached --stat
    ```
 4. **Generate the commit message using the `git-commit` skill.**
-   Invoke the `git-commit` skill against the currently staged diff to produce
-   the commit message (both subject and body when warranted by `git-commit` rules).
-   
+   Invoke the `git-commit` skill against the currently staged diff to produce the commit message (subject and body when warranted by `git-commit` rules).
+
    *Fallback (only if `git-commit` skill is not available in the workspace):*
    - Subject: `<type>(<scope>): <imperative summary>` (≤50 chars, max 72, no trailing period).
    - Body: Add only when *why* isn't obvious, for breaking changes, or when bundling coupled elements (bullets `- ...` wrapped at 72 chars).
-5. **Commit** with the generated message (preserving any body produced):
+5. **Commit** with the generated message:
    - Subject only:
      ```bash
      git commit -m "<subject>"
@@ -155,17 +179,52 @@ For each changeset being committed (whether batch or interactive):
      git commit -m "<subject>" -m "<body>"
      ```
 
-In batch mode, repeat steps 1–5 for each changeset in order, printing a
-one-line confirmation after each commit (`✅ Changeset N: <hash> <subject>`).
+In batch mode, print a one-line confirmation after each commit (`✅ Changeset N: <hash> <subject>`).
 
-## Step 6 — Wrap up
+---
 
-After all changesets are processed, show a summary:
+## Step 6 — Push (if Push mode)
 
-```
+- **If Push mode was NOT requested**:
+  Do not push. Remind the user they can push when ready:
+  - Existing branch: `git push origin <branch>`
+  - New branch: `git push -u origin <branch>`
+
+- **If Push mode WAS requested** (`/git-stage push` or `/git-stage branch push`):
+  Show a confirmation prompt with branch and remote details before executing:
+  - Remote: `origin` (or target remote)
+  - Branch: `<current-or-new-branch>`
+  - Upstream flag: `-u` if new branch
+
+  Use `ask_question`:
+  - `(Recommended) Push commits now (git push ...)`
+  - `Cancel push (keep commits local)`
+
+  Upon user confirmation, execute:
+  - For existing branch:
+    ```bash
+    git push origin <branch>
+    ```
+  - For new branch:
+    ```bash
+    git push -u origin <branch>
+    ```
+
+  If canceled by the user, report that commits remain safely saved in the local branch and provide the manual command to push later.
+
+---
+
+## Step 7 — Wrap up
+
+Display a final summary:
+
+```markdown
 ✅ Committed:
   - <hash> <subject>
   - <hash> <subject>
+
+Branch: <branch-name>
+Push: <Pushed to origin/<branch> | Skipped / Local only>
 
 ⏭️ Skipped:
   - Changeset 3: <label> (N files still uncommitted)
@@ -173,39 +232,21 @@ After all changesets are processed, show a summary:
 Remaining uncommitted files: N
 ```
 
-If any files remain uncommitted, offer to stage them as a final catch-all
-commit or leave them for later.
+If any uncommitted files remain, offer to stage them into a final commit or leave them untouched.
+
+---
 
 ## Edge cases
 
-- **Already-staged files**: include them in the analysis. If they logically
-  belong with unstaged files, bundle them together (they'll be unstaged and
-  re-staged as part of the changeset).
-- **Merge conflicts**: if `git status` shows conflicts, stop and tell the
-  user to resolve them first.
-- **Large number of files (>30)**: still organize them into changesets, but be more aggressive
-  about combining into fewer changesets to avoid review fatigue. Mention that the
-  user can ask you to split specific changesets further.
-- **Binary files**: include them in changesets based on their path/name, but
-  note them as `(binary)` since their diff can't be read.
+- **Already-staged files**: Include them in the analysis. If they logically belong with unstaged files, bundle them together (they are unstaged and re-staged as part of the changeset).
+- **Merge conflicts**: If `git status` shows unmerged paths or conflicts, stop immediately and ask the user to resolve them first.
+- **Large number of files (>30)**: Cluster more aggressively into fewer changesets to avoid review fatigue, noting that the user can request further splits.
+- **Binary files**: Include them in changesets by path, marked as `(binary)` since diffs cannot be inspected.
+- **Branch already exists**: If the requested or inferred new branch already exists, prompt the user to choose another name or switch to the existing branch.
 
-## Commit messages
+---
 
-**All commit messages are generated by the `git-commit` skill.**
-Always read and follow `.agents/skills/git-commit/SKILL.md` to produce the message
-from the staged diff. Do not author messages independently when `git-commit` is available.
-Be sure to preserve and commit any body generated by `git-commit` using multiple `-m` arguments
-(`git commit -m "<subject>" -m "<body>"`).
+## References
 
-Only if `git-commit` is missing from the workspace, fall back to standard Conventional Commits
-with a body included only when required (non-obvious rationale, coupled changes, migrations, breaking changes).
-
-## Boundaries
-
-- This skill **partitions, stages, and commits**. It does **not** push.
-  After all commits are done, remind the user they can push when ready:
-  `git push origin <branch>`.
-- If the user only wants changeset suggestions without committing, stop
-  after Step 4 and don't proceed to staging.
-- Respect the user's decisions — if they want to merge or rearrange changesets,
-  do it without pushback.
+- **Branch Naming**: See `references/branch-conventions.md` for branch prefix types, format rules, and examples.
+- **Commit Messages**: Follow `.agents/skills/git-commit/SKILL.md` to produce commit messages from staged diffs. Do not author messages independently when `git-commit` is available.

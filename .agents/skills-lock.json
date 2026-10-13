@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "packageVersion": "2.4.1",
+  "installedSkills": {
+    "git-stage": {
+      "version": "2.4.1"
+    }
+  }
+}
