@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Questions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+  // Set the theme before first paint to avoid a flash.
+  (function () {
+    var t = null;
+    try { t = localStorage.getItem("codeviva:theme"); } catch (e) {}
+    if (!t) t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", t);
+  })();
+</script>
+<style>
+  :root {
+    --bg: #F6F7F9; --surface: #FFFFFF; --text: #161A22; --muted: #5E6676;
+    --line: #E2E5EB; --accent: #2B59D9; --accent-soft: #E8EEFC;
+    --easy: #1B8A5A; --medium: #A8690D; --hard: #C2410C;
+    --sans: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  [data-theme="dark"] {
+    --bg: #0E1116; --surface: #161A21; --text: #E7E9EE; --muted: #9AA2B1;
+    --line: #252B35; --accent: #8CA9FF; --accent-soft: #1D2638;
+    --easy: #4CC38A; --medium: #E0B04F; --hard: #F08A5D;
+  }
+  * { box-sizing: border-box; }
+  html { color-scheme: light dark; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 400 14px/1.5 var(--sans); -webkit-font-smoothing: antialiased;
+  }
+  button, input, select { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .wrap { max-width: 820px; margin: 0 auto; padding: 0 20px; }
+
+  header.top {
+    position: sticky; top: 0; z-index: 10; background: var(--bg);
+  }
+  .head-row { display: flex; align-items: center; gap: 12px; padding-top: 7px; padding-bottom: 7px; }
+  .head-row h1 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; flex: 1; min-width: 0;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .reviewed { font-size: 12.5px; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .reviewed b { color: var(--text); font-weight: 600; }
+  .icon-btn {
+    width: 28px; height: 28px; display: grid; place-items: center; flex: none;
+    background: transparent; border: 1px solid var(--line); border-radius: 8px; color: var(--muted);
+  }
+  .icon-btn:hover { color: var(--text); border-color: var(--muted); }
+  .bar { height: 2px; background: var(--line); }
+  .bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .25s ease; }
+
+  .filters { padding: 14px 0 4px; display: grid; gap: 10px; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .field {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+    padding: 5px 10px; min-height: 32px; font-size: 13px;
+  }
+  .search { flex: 1 1 200px; min-width: 0; }
+  select.field { padding-right: 8px; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip {
+    background: transparent; border: 1px solid var(--line); color: var(--muted);
+    border-radius: 999px; padding: 3px 10px; font-size: 12.5px;
+  }
+  .chip:hover { color: var(--text); border-color: var(--muted); }
+  .chip[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 500; }
+  .showing { font-size: 12px; color: var(--muted); margin: 2px 0 0; }
+
+  .list { margin: 10px 0 32px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .q { display: grid; grid-template-columns: 24px 1fr; gap: 10px; padding: 14px 16px 13px; border-top: 1px solid var(--line); }
+  .q:first-child { border-top: 0; }
+  .q.done .text { color: var(--muted); }
+  .q.done .meta, .q.done .files { opacity: .7; }
+
+  .check { position: relative; width: 18px; height: 18px; margin-top: 1px; }
+  .check input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+  .check span {
+    position: absolute; inset: 0; border: 1.5px solid var(--muted); border-radius: 6px;
+    display: grid; place-items: center; pointer-events: none; transition: background .15s, border-color .15s;
+  }
+  .check span::after {
+    content: ""; width: 4px; height: 8px; border: solid var(--bg); border-width: 0 1.5px 1.5px 0;
+    transform: rotate(45deg) translate(-.5px, -1px); opacity: 0;
+  }
+  .check input:checked + span { background: var(--accent); border-color: var(--accent); }
+  .check input:checked + span::after { opacity: 1; }
+  .check input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; font-size: 12px; color: var(--muted); margin-bottom: 3px; }
+  .dot { display: inline-flex; align-items: center; gap: 6px; }
+  .dot::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .easy { color: var(--easy); } .medium { color: var(--medium); } .hard { color: var(--hard); }
+  .revisit { color: var(--accent); font-weight: 500; }
+  .text { font-size: 14.5px; line-height: 1.5; margin: 0; }
+  .files { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .files code {
+    font: 400 11.5px var(--mono); color: var(--muted); background: var(--bg); overflow-wrap: anywhere;
+    border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px;
+  }
+  .ans-btn {
+    margin-top: 8px; background: transparent; border: 0; padding: 0;
+    color: var(--accent); font-size: 12.5px; font-weight: 500;
+  }
+  .ans-btn:hover { text-decoration: underline; }
+  .answer { margin-top: 8px; padding: 10px 12px; background: var(--bg); border-left: 2px solid var(--accent); border-radius: 0 8px 8px 0; font-size: 13px; }
+  .answer p { margin: 0 0 8px; } .answer p:last-child { margin: 0; }
+  .answer ul { margin: 0 0 8px; padding-left: 20px; }
+  .answer code { font: 400 0.85em var(--mono); background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; }
+  .answer[hidden] { display: none; }
+  .where { margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--line); display: grid; gap: 8px; }
+  .where > b { font-size: 12px; font-weight: 600; color: var(--muted); }
+  .loc { display: grid; gap: 2px; }
+  .loc .at { display: flex; gap: 8px; flex-wrap: wrap; align-items: baseline; }
+  .answer .loc code { font: 400 11.5px var(--mono); background: none; border: 0; padding: 0; overflow-wrap: anywhere; }
+  .answer .loc .path { color: var(--accent); }
+  .answer .loc .sym { color: var(--text); font-weight: 500; }
+  .loc .note { margin: 0; color: var(--muted); font-size: 12.5px; }
+
+  .empty { padding: 40px 20px; text-align: center; color: var(--muted); }
+  .empty button { margin-top: 10px; background: transparent; border: 1px solid var(--line); border-radius: 8px; padding: 6px 14px; }
+
+  footer { padding: 0 0 48px; display: flex; gap: 16px; font-size: 0.85rem; }
+  footer button { background: none; border: 0; padding: 0; color: var(--muted); }
+  footer button:hover { color: var(--text); text-decoration: underline; }
+
+  @media (max-width: 560px) {
+    .wrap { padding-left: 12px; padding-right: 12px; }
+    .head-row { gap: 8px; }
+    .field { flex: 1 1 calc(50% - 5px); }
+    .search { flex-basis: 100%; }
+    .q { padding: 12px 10px; gap: 8px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap head-row">
+    <h1 id="title">Interview questions</h1>
+    <span class="reviewed" id="count" aria-live="polite"></span>
+    <button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark mode"></button>
+  </div>
+  <div class="bar" role="progressbar" aria-label="Questions reviewed" id="bar"><i id="fill"></i></div>
+</header>
+
+<main class="wrap">
+  <section class="filters" aria-label="Filters">
+    <div class="row">
+      <input class="field search" id="search" type="search" placeholder="Search questions" aria-label="Search questions">
+      <select class="field" id="difficulty" aria-label="Difficulty">
+        <option value="all">All difficulties</option>
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+      </select>
+      <select class="field" id="status" aria-label="Status">
+        <option value="all">All questions</option>
+        <option value="pending">Not reviewed</option>
+        <option value="done">Reviewed</option>
+        <option value="revisit">Revisit</option>
+      </select>
+    </div>
+    <div class="chips" id="categories" role="group" aria-label="Categories"></div>
+    <p class="showing" id="showing"></p>
+  </section>
+
+  <section class="list" id="list" aria-label="Questions"></section>
+
+  <footer>
+    <button type="button" id="export">Export progress</button>
+    <button type="button" id="import">Import progress</button>
+    <button type="button" id="reset">Reset progress</button>
+    <input type="file" id="file" accept="application/json" hidden>
+  </footer>
+</main>
+
+<script id="data" type="application/json">__QUESTIONS_JSON__</script>
+<script>
+(function () {
+  var DATA;
+  try { DATA = JSON.parse(document.getElementById("data").textContent); }
+  catch (e) { DATA = { title: "Project", questions: [] }; }
+  var QS = DATA.questions || [];
+  var PKEY = "codeviva:progress:" + (DATA.title || "default");
+  var done = new Set();
+  var openAnswers = new Set();
+  var f = { q: "", cat: "All", diff: "all", status: "all" };
+
+  function store(get, key, val) {
+    try { return get ? localStorage.getItem(key) : localStorage.setItem(key, val); } catch (e) { return null; }
+  }
+  try { done = new Set(JSON.parse(store(true, PKEY) || "[]")); } catch (e) {}
+  function saveDone() { store(false, PKEY, JSON.stringify(Array.from(done))); }
+
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  function loc(f) { return typeof f === "string" ? f : f.file + (f.lines ? ":" + f.lines : ""); }
+  function where(q) {
+    var fs = (q.files || []).filter(function (f) { return f.symbol || f.note; });
+    if (!fs.length) return "";
+    return '<div class="where"><b>Where in the code</b>' + fs.map(function (f) {
+      return '<div class="loc"><div class="at"><code class="path">' + esc(loc(f)) + "</code>" +
+        (f.symbol ? '<code class="sym">' + esc(f.symbol) + "</code>" : "") + "</div>" +
+        (f.note ? '<p class="note">' + esc(f.note) + "</p>" : "") + "</div>";
+    }).join("") + "</div>";
+  }
+
+  // Minimal formatting for answers: paragraphs, "- " bullets, `inline code`.
+  function fmt(text) {
+    var inline = function (s) { return esc(s).replace(/`([^`]+)`/g, "<code>$1</code>"); };
+    return text.split(/\n\s*\n/).map(function (block) {
+      var lines = block.split("\n");
+      if (lines.every(function (l) { return /^\s*[-*] /.test(l); })) {
+        return "<ul>" + lines.map(function (l) { return "<li>" + inline(l.replace(/^\s*[-*] /, "")) + "</li>"; }).join("") + "</ul>";
+      }
+      return "<p>" + inline(lines.join(" ")) + "</p>";
+    }).join("");
+  }
+
+  // Header and theme
+  document.title = DATA.title || "Project";
+  $("title").textContent = DATA.title || "Project";
+  var sun = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+  var moon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+  function paintTheme() {
+    $("theme").innerHTML = document.documentElement.getAttribute("data-theme") === "dark" ? sun : moon;
+  }
+  $("theme").addEventListener("click", function () {
+    var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    store(false, "codeviva:theme", next);
+    paintTheme();
+  });
+  paintTheme();
+
+  function updateCount() {
+    var n = QS.filter(function (q) { return done.has(q.id); }).length;
+    $("count").innerHTML = "Reviewed <b>" + n + "</b> of " + QS.length;
+    var pct = QS.length ? Math.round(n / QS.length * 100) : 0;
+    $("fill").style.width = pct + "%";
+    $("bar").setAttribute("aria-valuenow", pct);
+  }
+
+  // Category chips
+  var cats = ["All"];
+  QS.forEach(function (q) { if (cats.indexOf(q.category) < 0) cats.push(q.category); });
+  function paintChips() {
+    $("categories").innerHTML = cats.map(function (c) {
+      return '<button type="button" class="chip" data-cat="' + esc(c) + '" aria-pressed="' + (f.cat === c) + '">' + esc(c) + "</button>";
+    }).join("");
+  }
+  $("categories").addEventListener("click", function (e) {
+    var b = e.target.closest(".chip"); if (!b) return;
+    f.cat = b.getAttribute("data-cat"); paintChips(); render();
+  });
+
+  function visible() {
+    var term = f.q.trim().toLowerCase();
+    return QS.filter(function (q) {
+      if (f.cat !== "All" && q.category !== f.cat) return false;
+      if (f.diff !== "all" && q.difficulty !== f.diff) return false;
+      if (f.status === "done" && !done.has(q.id)) return false;
+      if (f.status === "pending" && done.has(q.id)) return false;
+      if (f.status === "revisit" && !q.weak) return false;
+      if (term && (q.question + " " + (q.answer || "") + " " + (q.files || []).map(function (x) { return [x.file, x.symbol, x.note].join(" "); }).join(" ")).toLowerCase().indexOf(term) < 0) return false;
+      return true;
+    });
+  }
+
+  function render() {
+    var items = visible();
+    $("showing").textContent = "Showing " + items.length + " of " + QS.length;
+    if (!items.length) {
+      $("list").innerHTML = '<div class="empty">No questions match these filters.<br><button type="button" id="clear">Clear filters</button></div>';
+      $("clear").addEventListener("click", clearFilters);
+      return;
+    }
+    $("list").innerHTML = items.map(function (q) {
+      var open = openAnswers.has(q.id);
+      return '<article class="q' + (done.has(q.id) ? " done" : "") + '" data-id="' + esc(q.id) + '">' +
+        '<label class="check"><input type="checkbox"' + (done.has(q.id) ? " checked" : "") + ' aria-label="Mark as reviewed"><span></span></label>' +
+        "<div>" +
+          '<div class="meta"><span>' + esc(q.category) + '</span><span class="dot ' + q.difficulty + '">' + q.difficulty + "</span>" +
+          (q.weak ? '<span class="revisit">Revisit</span>' : "") + "</div>" +
+          '<p class="text">' + esc(q.question) + "</p>" +
+          (q.files && q.files.length ? '<div class="files">' + q.files.map(function (p) { return "<code>" + esc(loc(p)) + "</code>"; }).join("") + "</div>" : "") +
+          (q.answer ? '<button type="button" class="ans-btn" aria-expanded="' + open + '">' + (open ? "Hide answer" : "Show answer") + "</button>" +
+            '<div class="answer"' + (open ? "" : " hidden") + ">" + fmt(q.answer) + where(q) + "</div>" : "") +
+        "</div></article>";
+    }).join("");
+  }
+
+  $("list").addEventListener("change", function (e) {
+    if (e.target.type !== "checkbox") return;
+    var row = e.target.closest(".q"), id = row.getAttribute("data-id");
+    if (e.target.checked) done.add(id); else done.delete(id);
+    row.classList.toggle("done", e.target.checked);
+    saveDone(); updateCount();
+  });
+  $("list").addEventListener("click", function (e) {
+    var b = e.target.closest(".ans-btn"); if (!b) return;
+    var row = b.closest(".q"), id = row.getAttribute("data-id"), ans = row.querySelector(".answer");
+    var show = ans.hidden;
+    ans.hidden = !show; b.textContent = show ? "Hide answer" : "Show answer"; b.setAttribute("aria-expanded", show);
+    if (show) openAnswers.add(id); else openAnswers.delete(id);
+  });
+
+  function clearFilters() {
+    f = { q: "", cat: "All", diff: "all", status: "all" };
+    $("search").value = ""; $("difficulty").value = "all"; $("status").value = "all";
+    paintChips(); render();
+  }
+  $("search").addEventListener("input", function (e) { f.q = e.target.value; render(); });
+  $("difficulty").addEventListener("change", function (e) { f.diff = e.target.value; render(); });
+  $("status").addEventListener("change", function (e) { f.status = e.target.value; render(); });
+
+  // Export, import, reset
+  $("export").addEventListener("click", function () {
+    var blob = new Blob([JSON.stringify({ title: DATA.title, reviewed: Array.from(done) }, null, 2)], { type: "application/json" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = (String(DATA.title || "project").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "project") + "-progress.json"; a.click();
+    URL.revokeObjectURL(a.href);
+  });
+  $("import").addEventListener("click", function () { $("file").click(); });
+  $("file").addEventListener("change", function (e) {
+    var file = e.target.files[0]; if (!file) return;
+    var r = new FileReader();
+    r.onload = function () {
+      try {
+        var j = JSON.parse(r.result);
+        if (j.title && j.title !== DATA.title && !confirm('This progress file is from "' + j.title + '", not "' + DATA.title + '". Import anyway?')) return;
+        var ids = j.reviewed || [];
+        var known = new Set(QS.map(function (q) { return q.id; }));
+        ids.forEach(function (id) { if (known.has(id)) done.add(id); });
+        saveDone(); updateCount(); render();
+      } catch (err) { alert("That file is not a valid progress export."); }
+    };
+    r.readAsText(file); e.target.value = "";
+  });
+  $("reset").addEventListener("click", function () {
+    if (!confirm("Clear all reviewed marks?")) return;
+    done.clear(); saveDone(); updateCount(); render();
+  });
+
+  paintChips(); updateCount(); render();
+})();
+</script>
+</body>
+</html>
