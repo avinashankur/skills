@@ -58,7 +58,7 @@ git push -u origin <branch-name>
 
 ## Step 7 — Open the PR
 
-**Find the issue, if any**, the same way `code-review` does: issue references in the commit message just created (`#123`, `Closes #45`), or in the branch name if it was inferred with an issue number. Fetch details via the `issue-tracker-gh` skill if available, else `gh issue view <number>`.
+**Find the issue, if any**, the same way `code-review` does: issue references in the commit message just created (`#123`, `Closes #45`), or in the branch name if it was inferred with an issue number. Fetch details via the `issue-tracker` skill if available, else `gh issue view <number>`.
 
 Draft the PR:
 - **Title**: short, from the commit/change summary.

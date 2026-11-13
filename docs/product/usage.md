@@ -400,7 +400,7 @@ skills update -g
 | `grill-me` | Meta & Tooling | Relentless interview to sharpen a plan or design |
 | `grilling` | Meta & Tooling | Stress-test plans or designs with relentless questioning |
 | `research` | Meta & Tooling | Investigate questions against primary sources and capture Markdown findings |
-| `issue-tracker-gh` | Meta & Tooling | Create, list, search, update, close, and manage GitHub issues with `gh` CLI |
+| `issue-tracker` | Meta & Tooling | Manage issues across GitHub, Linear, or local .scratch files, and break plans into vertical-slice tickets |
 
 ---
 

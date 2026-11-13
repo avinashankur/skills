@@ -94,7 +94,7 @@ Every skill installed by this CLI is recorded in `.agents/skills-lock.json`:
 | `handoff` | Compact a conversation into a handoff document for another agent |
 | `humanizer` | Remove signs of AI-generated writing from text to make it natural and human |
 | `improve-codebase-architecture` | Scan a codebase for architecture improvement opportunities and present an HTML report |
-| `issue-tracker-gh` | Create, list, search, update, close, and manage GitHub issues using the gh CLI |
+| `issue-tracker` | Manage issues across GitHub, Linear, or local .scratch files, and break plans into vertical-slice tickets |
 | `npm-publish` | Publish an npm package to the registry and sync releases with GitHub |
 | `project-docs` | Generate and maintain comprehensive technical and engineering documentation |
 | `redesign-existing-projects` | Upgrade existing websites and apps to premium design quality |
